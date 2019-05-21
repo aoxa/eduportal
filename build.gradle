@@ -1,0 +1,70 @@
+
+plugins {
+    id 'java'
+    id 'maven'
+    id 'com.gradle.build-scan' version '1.16'
+    id 'org.springframework.boot' version '2.1.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+}
+
+group = 'org.springframework.boot'
+version = '2.1.1.RELEASE'
+
+description = """auth"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+// enableFeaturePreview('IMPROVED_POM_SUPPORT')
+
+repositories {
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+bootJar {
+    mainClassName = 'com.eduportal.auth.WebApplication'
+}
+
+bootRun {
+    jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8585"]
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-dependencies', version:version
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:version
+
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:version
+
+    compile('org.apache.tomcat.embed:tomcat-embed-jasper')
+
+    compile group: 'org.springframework.security', name: 'spring-security-taglibs'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:version
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version:version
+
+    compile group: 'javax.servlet', name: 'jstl', version:'1.2'
+
+    // Use MySQL Connector-J
+    compile group: 'mysql', name:'mysql-connector-java'
+
+//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version:version
+    //runtime group: 'org.hsqldb', name: 'hsqldb', version:'2.4.1'
+
+    // providedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version:'2.1.1.RELEASE'
+    // providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version:'9.0.13'
+
+    components {
+        withModule('org.springframework:spring-beans') {
+            allVariants {
+                withDependencyConstraints {
+                    it.findAll { it.name == 'snakeyaml' } .each { it.version { strictly '1.19' } }
+                }
+            }
+        }
+    }
+}
