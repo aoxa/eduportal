@@ -2,6 +2,16 @@ body {
     background-color: #eee;
 }
 
+.container.white {
+    margin-top: 30px;
+    background-color: white;
+    border-radius: .3rem;
+    webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    padding: 30px;
+}
+
 .form-signin {
     max-width: 330px;
     padding: 15px;
@@ -49,7 +59,7 @@ body {
     margin: 15px 0 15px;
 }
 
-#fab-add {
+.bottom-right-floating {
     position: fixed;
     right: 40px;
     bottom: 40px;
@@ -73,4 +83,8 @@ body {
     text-align: center;
     font-size: 12px;
     line-height: 1.42857;
+}
+
+#ui-datepicker-div {
+    z-index: 20 !important;
 }

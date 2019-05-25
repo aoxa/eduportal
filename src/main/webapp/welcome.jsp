@@ -26,9 +26,10 @@
         </div>
         <div class="col-sm-5">
             <h4>Mis cursos</h4>
+
             <c:forEach items = "${courses}" var = "course">
                 <c:if test="${not empty course.neededRole}">
-                    <sec:authorize access="hasAuthority(${course.neededRole.name})">
+                    <sec:authorize access='hasRole(course.neededRole.name)'>
                     <p><a href="/course/${course.id}"><c:out value = "${course.name}"/></a><p>
                     </sec:authorize>
                 </c:if>

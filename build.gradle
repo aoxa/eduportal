@@ -50,10 +50,11 @@ dependencies {
     compile group: 'javax.servlet', name: 'jstl', version:'1.2'
 
     // Use MySQL Connector-J
-    compile group: 'mysql', name:'mysql-connector-java'
+    //compile group: 'mysql', name:'mysql-connector-java'
+    compile group: 'org.freemarker', name:'freemarker'
 
-//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version:version
-    //runtime group: 'org.hsqldb', name: 'hsqldb', version:'2.4.1'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version:version
+    runtime group: 'org.hsqldb', name: 'hsqldb', version:'2.4.1'
 
     // providedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version:'2.1.1.RELEASE'
     // providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version:'9.0.13'

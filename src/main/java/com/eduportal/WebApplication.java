@@ -13,6 +13,7 @@ public class WebApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(WebApplication.class);
     }
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(WebApplication.class, args);
     }

@@ -21,13 +21,12 @@ public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
 
-    @Secured({"user"})
     @GetMapping("/add")
     public String displayAdd(Model model) {
         return "new-course";
     }
 
-    @Secured({"user"})
+    //@Secured({"user"})
     @PostMapping("/add")
     public String performAdd(Model model, AddCourseForm form) {
         Course c = new Course();

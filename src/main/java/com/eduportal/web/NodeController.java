@@ -40,6 +40,16 @@ public class NodeController {
         return type + "/new-element";
     }
 
+    @GetMapping("/{type}/{node}/edit")
+    public String displayEdit(Model model, @PathVariable("node") Node node,
+                             @PathVariable("type") String type) {
+        model.addAttribute("node", node);
+        model.addAttribute("course", node.getCourse());
+        model.addAttribute("type", type);
+
+        return type + "/new-element";
+    }
+
     @GetMapping("/node/{node}")
     public String view(Model model, @PathVariable("node") Node node) {
         model.addAttribute("node", node);
@@ -48,7 +58,7 @@ public class NodeController {
     }
 
     @PostMapping(value = "/{course}/survey/add")
-    public String addSurvey(@PathVariable("course") Course course, @RequestBody Survey survey,
+    public String addSurvey(Model model, @PathVariable("course") Course course, @RequestBody Survey survey,
                             HttpServletRequest request, HttpServletResponse response) {
         survey.setCourse(course);
 
@@ -59,6 +69,9 @@ public class NodeController {
         courseRepository.save(course);
 
         response.setHeader("location", createURL(request, "/node/"+survey.getId()));
+
+        model.addAttribute("node", survey);
+        model.addAttribute("type", "survey");
 
         return "survey/new-element";
     }
