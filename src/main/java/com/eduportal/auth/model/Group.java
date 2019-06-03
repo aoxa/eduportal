@@ -13,6 +13,9 @@ public class Group {
     @ManyToMany(mappedBy = "groups")
     private Set<User> users;
 
+    @ManyToMany
+    private Set<Role> roles;
+
     private String name;
 
     public Long getId() {
@@ -37,5 +40,13 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

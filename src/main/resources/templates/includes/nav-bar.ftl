@@ -16,6 +16,7 @@
                 <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown04">
                     <a class="dropdown-item" onclick="document.forms['logoutForm'].submit()">Logout</a>
+                    <#if hasAuthority('admin')><a class="dropdown-item" href="<@spring.url '/admin/dashboard' />">Admin</a></#if>
                 </div>
             </li>
         </ul>

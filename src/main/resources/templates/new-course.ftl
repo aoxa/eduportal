@@ -12,7 +12,7 @@
 
 <body>
 
-<#include "nav-bar.ftl" />
+<#include "includes/nav-bar.ftl" />
 
 <main role="main" class="container">
     <form method="post">

@@ -13,7 +13,7 @@
 
 <body>
 
-<#include "nav-bar.ftl" />
+<#include "includes/nav-bar.ftl" />
 
 <main role="main" class="col-sm-10 offset-1">
     <div class="row">

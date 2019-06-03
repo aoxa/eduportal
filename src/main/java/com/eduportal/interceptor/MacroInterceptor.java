@@ -4,6 +4,8 @@ import com.eduportal.annotation.Interceptor;
 import com.eduportal.auth.model.Role;
 import com.eduportal.auth.repository.UserRepository;
 import com.eduportal.auth.service.UserDetailService;
+import com.eduportal.model.Settings;
+import com.eduportal.repository.SettingsRepository;
 import com.eduportal.web.view.functions.HasAuthority;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateMethodModelEx;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @Interceptor
@@ -30,6 +33,9 @@ public class MacroInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SettingsRepository settingsRepository;
 
     @PostConstruct
     public void startUp() {
@@ -55,6 +61,10 @@ public class MacroInterceptor extends HandlerInterceptorAdapter {
                 return userRepository.findByUsername(((UserDetails)userDetails).getUsername());
             }
             else return null;
+        });
+        macros.put("getSetting", (params) -> {
+            Optional<Settings> setting = settingsRepository.findById(params.get(0).toString());
+            return setting.isPresent()? setting.get().getValue():null;
         });
     }
 

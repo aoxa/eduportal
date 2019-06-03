@@ -6,11 +6,11 @@
     <meta charset="utf-8">
     <title>${node.title}</title>
 
-<#include "../head-includes.ftl" />
+<#include "../includes/head-includes.ftl" />
 </head>
 <body>
 
-<#include "../nav-bar.ftl"/>
+<#include "../includes/nav-bar.ftl"/>
 
 <div class="nav-scroller bg-white box-shadow">
     <nav class="nav nav-underline">

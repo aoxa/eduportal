@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <title>Crear nueva asignatura</title>
 
-<#include "../head-includes.ftl" />
+    <#include "../includes/head-includes.ftl" />
 
     <link href='https://cdn.jsdelivr.net/npm/froala-editor@2.9.5/css/froala_editor.min.css' rel='stylesheet'
           type='text/css'/>
@@ -32,7 +32,7 @@
 </head>
 <body>
 
-<#include "../nav-bar.ftl" />
+<#include "../includes/nav-bar.ftl" />
 
 <main role="main" class="container">
 
@@ -41,7 +41,7 @@
     <div class="row">
         <div class="col-sm-9">
             <h3>Ingrese el titulo de la asignatura</h3>
-            <input id="titulo" type="text" class="form-control" placeholder="Ingrese el titulo aqui">
+            <input id="titulo" type="text" class="form-control" placeholder="Ingrese el titulo aqui"<#if node??>value="${node.title}" </#if>>
         </div>
         <div class="col-sm-3">
             <label>Fecha de entrega</label>
@@ -50,19 +50,61 @@
     </div>
 
     <div class="row">
-        <textarea id="editor"></textarea>
+        <textarea id="editor">
+        <#if node??>${node.description}</#if>
+        </textarea>
     </div>
 
 
-    <div id="elements" style="display: none;">
+    <div id="elements" <#if !node??>style="display:none"</#if>>
     <#if node??>
-        <#list node.elements as element>
+        <#list node.sortedElements as element>
             <div id="element-skeleton-${element.id}" class="row element" element-weight="${element.weight}">
-                <div class="col-sm-1 panel-heading ui-sortable-handle"><i class="fas fa-arrows-alt-v"></i></div>
+                <div class="col-sm-1 panel-heading ui-sortable-handle">
+                    <i class="fas fa-arrows-alt-v"></i>
+                </div>
                 <div class="element-title col-sm-5">${element.title}</div>
-                <div class="element-type col-sm-5" element-type="checkbox"><div class="form-check"><input class="form-check-input" type="checkbox" name="eoeocasdc" value="contenido"><label class="form-check-label">contenido</label></div></div>
+                <#if element.type = "Select">
+                    <#if element.radioButton>
+                        <div class="element-type col-sm-5" element-type="radio">
+                            <#list element.options as option>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="${element.name}"
+                                           value="${option.value}">
+                                    <label class="form-check-label">${option.name}</label>
+                                </div>
+                            </#list>
+                        </div>
+                    <#elseif element.checkBox>
+                        <div class="element-type col-sm-5" element-type="checkbox">
+                            <#list element.options as option>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="${element.name}"
+                                           value="${option.value}">
+                                    <label class="form-check-label">${option.name}</label>
+                                </div>
+                            </#list>
+                        </div>
+                    <#else>
+                        <div class="element-type col-sm-5" element-type="select">
+                            <select class="form-control" <#if element.multivalued>multiple</#if>>
+                                <#list element.options as option>
+                                    <option value="${option.value}">${option.name}</option>
+                                </#list>
+                            </select>
+                        </div>
+                    </#if>
+                <#else>
+                    <div class="element-type col-sm-5" element-type="input">
+                        <div class="form-check">
+                            <input class="form-check-input" type="input" name="${element.name}" value="contenido">
+                        </div>
+                    </div>
+                </#if>
+
                 <div class="col-sm-1">
                     <i data-toggle="tooltip" class="far fa-question-circle element-tip" data-original-title="${element.tip}" data-placement="right"></i>
+                    <a class="edit-element" href="#"><i class="far fa-edit" ></i></a>
                 </div>
             </div>
         </#list>
@@ -221,7 +263,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/${course.id}/${type}/add",
+                url: "<@spring.url '/${course.id}/${type}/add' />",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('${_csrf.headerName}', "${_csrf.token}");
                 },

@@ -1,6 +1,7 @@
 package com.eduportal.auth.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,14 +24,16 @@ public class User {
 
     private String email;
 
+    private Boolean active;
+
     @Transient
     private String passwordConfirm;
 
     @ManyToMany
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @ManyToMany
-    private Set<Group> groups;
+    private Set<Group> groups = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -110,5 +113,13 @@ public class User {
 
     public void setParent(User parent) {
         this.parent = parent;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }
