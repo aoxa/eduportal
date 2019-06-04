@@ -1,6 +1,8 @@
 package com.eduportal.web;
 
 import com.eduportal.auth.model.User;
+import com.eduportal.auth.repository.RoleRepository;
+import com.eduportal.auth.repository.UserRepository;
 import com.eduportal.auth.service.SecurityService;
 import com.eduportal.repository.CourseRepository;
 import com.eduportal.web.view.functions.HasAuthority;

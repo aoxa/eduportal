@@ -18,6 +18,8 @@
 
     <!-- Custom styles for this template -->
     <link href="<@spring.url '/resources/css/dashboard.css' />" rel="stylesheet">
+
+    <link href="<@spring.url '/resources/css/admin.css'/> rel="stylesheet">
 </head>
 
 <body>

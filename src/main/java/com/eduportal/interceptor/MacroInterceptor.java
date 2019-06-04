@@ -75,13 +75,18 @@ public class MacroInterceptor extends HandlerInterceptorAdapter {
             Object o,
             ModelAndView model) throws Exception {
 
-        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+        if (isAuthenticated() &&
                 model != null) {
             for(Map.Entry<String, TemplateMethodModelEx> entry : this.macros.entrySet()) {
                 model.addObject(entry.getKey(), entry.getValue());
             }
 
         }
+    }
+
+    private boolean isAuthenticated() {
+        return SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
     }
 
 }

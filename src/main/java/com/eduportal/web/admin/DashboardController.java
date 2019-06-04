@@ -2,6 +2,7 @@ package com.eduportal.web.admin;
 
 import com.eduportal.auth.model.Group;
 import com.eduportal.auth.model.Role;
+import com.eduportal.auth.model.User;
 import com.eduportal.auth.repository.GroupRepository;
 import com.eduportal.auth.repository.RoleRepository;
 import com.eduportal.auth.repository.UserRepository;
@@ -11,6 +12,8 @@ import com.eduportal.service.MailService;
 import com.eduportal.web.admin.form.GroupAddForm;
 import com.eduportal.web.admin.form.MailConfigForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -87,6 +90,17 @@ public class DashboardController {
         model.addAttribute("roleNames", roleRepository.findAll().stream().map(Role::getName).collect(Collectors.toList()));
 
         return "admin/users";
+    }
+
+    @GetMapping("/users/map")
+    public @ResponseBody
+    ResponseEntity<String> mapUsers(@RequestParam User user, @RequestParam Group group) {
+        user.getGroups().add(group);
+        group.getUsers().add(user);
+        userRepository.save(user);
+        groupRepository.save(group);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/test")
