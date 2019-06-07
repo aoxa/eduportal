@@ -2,14 +2,14 @@ package com.eduportal.model;
 
 import com.eduportal.model.partial.Element;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@DiscriminatorValue(Survey.TYPE)
 public class Survey extends Node {
+    public final static String TYPE = "survey";
+
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Element> elements = new HashSet<>();
 

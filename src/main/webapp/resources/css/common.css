@@ -88,3 +88,15 @@ body {
 #ui-datepicker-div {
     z-index: 20 !important;
 }
+
+#elements {
+    background-color: white;
+    border-radius: .3rem;
+    webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+}
+
+.element {
+    padding: 10px 0 10px;
+}

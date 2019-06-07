@@ -3,8 +3,11 @@ package com.eduportal.auth.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
@@ -31,10 +34,10 @@ public class User {
     @Transient
     private String passwordConfirm;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Group> groups = new HashSet<>();
 
     public Long getId() {
@@ -124,5 +127,23 @@ public class User {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    @Transient
+    public Set<Role> getAllRoles() {
+        Set<Role> roles = getGroups().stream().map(group->group.getRoles())
+                .flatMap(Collection::stream).collect(Collectors.toSet());
+        roles.addAll(this.getRoles());
+
+        return roles;
+    }
+
+    public boolean equals(Object o) {
+        if(null == o || !(o instanceof User)) return false;
+        return this.id.equals(((User)o).getId());
+    }
+
+    public int hashCode() {
+        return id.hashCode();
     }
 }

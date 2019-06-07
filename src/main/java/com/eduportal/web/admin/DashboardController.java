@@ -10,6 +10,7 @@ import com.eduportal.model.Settings;
 import com.eduportal.repository.SettingsRepository;
 import com.eduportal.service.MailService;
 import com.eduportal.web.admin.form.GroupAddForm;
+import com.eduportal.web.admin.form.InviteUserForm;
 import com.eduportal.web.admin.form.MailConfigForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -92,6 +93,35 @@ public class DashboardController {
         return "admin/users";
     }
 
+    @PostMapping("/users/invite")
+    public @ResponseBody Object invite(Model model, @RequestBody InviteUserForm inviteUserForm) {
+        User user = new User();
+        user.setEmail(inviteUserForm.getEmail());
+
+        inviteUserForm.getGroups().stream().map(role->Long.parseLong(role))
+                .map(groupId->groupRepository.findById(groupId))
+                .filter(optional->optional.isPresent()).map(optional->optional.get())
+                .forEach(group->user.getGroups().add(group));
+
+        inviteUserForm.getRoles().stream().map(role->Long.parseLong(role))
+                .map(roleId->roleRepository.findById(roleId))
+                .filter(optional->optional.isPresent()).map(optional->optional.get())
+                .forEach(role->user.getRoles().add(role));
+
+        userRepository.save(user);
+
+        mailService.sendInvitation(user);
+
+        return userRepository.findAll();
+    }
+
+    @GetMapping("/groups/remove/{group}")
+    public String remove(Model model, @PathVariable Group group) {
+        groupRepository.delete(group);
+        model.addAttribute("groups", groupRepository.findAll());
+        return "admin/tab/partial/group-list";
+    }
+
     @GetMapping("/users/map")
     public @ResponseBody
     ResponseEntity<String> mapUsers(@RequestParam User user, @RequestParam Group group) {
@@ -103,15 +133,8 @@ public class DashboardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public @ResponseBody String test() {
-        mailService.sendInvitation("pedro.zuppelli@gmail.com");
-
-        return "success";
-    }
-
     @PostMapping("/users/groups/add")
-    public String addGroup(@RequestBody GroupAddForm content) {
+    public String addGroup(Model model, @RequestBody GroupAddForm content) {
         Group group = groupRepository.findByName(content.getName());
 
         if(null == group) {
@@ -124,6 +147,7 @@ public class DashboardController {
 
         groupRepository.save(group);
 
-        return "redirect:/admin/users";
+        model.addAttribute("groups", groupRepository.findAll());
+        return "admin/tab/partial/group-list";
     }
 }

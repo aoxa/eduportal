@@ -32,7 +32,7 @@ public class IndexController {
     public String welcome(Model model) {
         User user = securityService.findLoggedInUser();
 
-        model.addAttribute("courses", courseRepository.findAll());
+        model.addAttribute("courses", courseRepository.findAllForUserRoles(user.getAllRoles()));
 
         return "welcome";
     }

@@ -9,7 +9,7 @@ public class Registration {
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
     private List<String> groups = new ArrayList<>();
     private List<String> roles = new ArrayList<>();
-    private String email;
+    private Long userId;
     private String expireDate;
 
     public List<String> getGroups() {
@@ -28,14 +28,6 @@ public class Registration {
         this.roles = roles;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getExpireDate() {
         return expireDate;
     }
@@ -46,5 +38,13 @@ public class Registration {
 
     public void setExpireDate(Date expireDate) {
         this.expireDate = SIMPLE_DATE_FORMAT.format(expireDate);
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

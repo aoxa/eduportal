@@ -37,41 +37,33 @@ public class UserController {
 
     @GetMapping("/registration")
     public String registration(Model model, @RequestParam String message){
-        model.addAttribute("userForm", new User());
         String content = new String(Base64.getDecoder().decode(message.getBytes()));
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Registration registration = objectMapper.readValue(content, Registration.class);
-            if (null != userService.findByEmail(registration.getEmail())) {
+            if (null == userService.findById(registration.getUserId())) {
                 return "error";
             }
 
-            User user = new User();
-            user.setEmail(registration.getEmail());
-            user.setUsername(registration.getEmail());
-            for(String roleName : registration.getRoles()) {
-                Role role = roleRepository.findByName(roleName);
-                if(null != role) {
-                    user.getRoles().add(role);
-                }
-            }
-            for(String groupName : registration.getGroups()) {
-                Group group = groupRepository.findByName(groupName);
-                if(null != group) {
-                    user.getGroups().add(group);
-                }
-            }
-            user.setPassword("pass");
+            User user = userService.findById(registration.getUserId());
 
-            userService.save(user);
+            decorate(user, registration);
+
+            model.addAttribute("userForm", user);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
         return "registration";
+    }
+
+    private void decorate(User user, Registration registration) {
+        registration.getGroups().stream().map(group->groupRepository.findByName(group))
+                .forEach(group->user.getGroups().add(group));
+        registration.getRoles().stream().map(role->roleRepository.findByName(role))
+                .forEach(role->user.getRoles().add(role));
     }
 
     @PostMapping("/registration")
@@ -84,7 +76,7 @@ public class UserController {
 
         userService.save(userForm);
 
-        securityService.autoLogin(userForm.getUsername(), userForm.getPassword());
+        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
 
         return "redirect:/welcome";
     }

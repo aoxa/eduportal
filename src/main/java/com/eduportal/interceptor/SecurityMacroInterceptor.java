@@ -26,14 +26,7 @@ import java.util.*;
 
 @Component
 @Interceptor
-public class MacroInterceptor extends HandlerInterceptorAdapter {
-    private Map<String, TemplateMethodModelEx> macros = new HashMap<>();
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private SettingsRepository settingsRepository;
+public class SecurityMacroInterceptor extends AbstractMacroInterceptor {
 
     @PostConstruct
     public void startUp() {
@@ -86,43 +79,7 @@ public class MacroInterceptor extends HandlerInterceptorAdapter {
 
             return hasRole ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
         });
-
-        macros.put("currentUser", (params)->{
-            Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            if( userDetails instanceof UserDetailService.UserDetailsWrapper) {
-                return ((UserDetailService.UserDetailsWrapper)userDetails).getUser();
-            } else if( userDetails instanceof UserDetails) {
-                return userRepository.findByUsername(((UserDetails)userDetails).getUsername());
-            }
-            else return null;
-        });
-
-        macros.put("getSetting", (params) -> {
-            Optional<Settings> setting = settingsRepository.findById(params.get(0).toString());
-            return setting.isPresent()? setting.get().getValue():null;
-        });
     }
 
-    @Override
-    public void postHandle(
-            HttpServletRequest req,
-            HttpServletResponse res,
-            Object o,
-            ModelAndView model) throws Exception {
-
-        if (isAuthenticated() &&
-                model != null) {
-            for(Map.Entry<String, TemplateMethodModelEx> entry : this.macros.entrySet()) {
-                model.addObject(entry.getKey(), entry.getValue());
-            }
-
-        }
-    }
-
-    private boolean isAuthenticated() {
-        return SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-    }
 
 }

@@ -1,7 +1,5 @@
 package com.eduportal.model;
 
-import com.eduportal.model.base.BaseEntity;
-
 import javax.persistence.*;
 import java.util.Date;
 

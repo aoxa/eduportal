@@ -2,7 +2,7 @@ package com.eduportal;
 
 
 import com.eduportal.annotation.Interceptor;
-import com.eduportal.interceptor.MacroInterceptor;
+import com.eduportal.interceptor.SecurityMacroInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -15,9 +15,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
+import java.util.Locale;
 
 @Configuration
 @EnableWebSecurity
@@ -31,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     }
 
     @Autowired
-    MacroInterceptor macroInterceptor;
+    SecurityMacroInterceptor macroInterceptor;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -41,6 +44,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .filter(o -> o instanceof HandlerInterceptor)
                 .map(o -> (HandlerInterceptor)o )
                 .forEach(bean ->registry.addInterceptor(bean));
+    }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        slr.setDefaultLocale(Locale.forLanguageTag("es"));
+        return slr;
     }
 
     protected void configure(HttpSecurity http) throws Exception {

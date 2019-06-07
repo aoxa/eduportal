@@ -16,7 +16,7 @@ public class Group {
     @ManyToMany(mappedBy = "groups")
     private Set<User> users;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     private String name;

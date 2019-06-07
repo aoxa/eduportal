@@ -2,8 +2,12 @@ package com.eduportal.web;
 
 import com.eduportal.auth.model.Role;
 import com.eduportal.auth.model.User;
+import com.eduportal.auth.service.SecurityService;
 import com.eduportal.model.Course;
 import com.eduportal.repository.CourseRepository;
+import com.eduportal.repository.NodeRepository;
+import com.eduportal.service.node.NodeTypeService;
+import com.eduportal.web.view.form.AddCourseForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -26,15 +30,15 @@ public class CourseController {
         return "new-course";
     }
 
-    //@Secured({"user"})
     @PostMapping("/add")
     public String performAdd(Model model, AddCourseForm form) {
         Course c = new Course();
-        c.setDescription(form.desc);
-        c.setName(form.name);
+        c.setDescription(form.getDesc());
+        c.setName(form.getName());
 
         Role role = new Role();
         role.setName(form.getName().toLowerCase().replace(" ", "_"));
+        role.setType(Role.Type.course);
         c.setNeededRole(role);
 
         courseRepository.save(c);
@@ -42,10 +46,23 @@ public class CourseController {
         return "redirect:/course/"+c.getId();
     }
 
+
+    @Autowired
+    private SecurityService securityService;
+
+    @Autowired
+    private NodeRepository nodeRepository;
+
+    @Autowired
+    private NodeTypeService nodeTypeService;
+
     @GetMapping("{course}")
     public String viewCourse(Model model, @PathVariable Course course) {
         //TODO validate user has role to be here
+        User user = securityService.findLoggedInUser();
+        model.addAttribute("isAuthority", course.getAuthorities().contains(user));
         model.addAttribute("course", course);
+        model.addAttribute("nodeTypes", nodeTypeService.getNodeTypes());
 
         return "course/view";
     }
@@ -60,27 +77,6 @@ public class CourseController {
 
         courseRepository.save(course);
 
-        return "course/view";
-    }
-
-    public class AddCourseForm {
-        private String name;
-        private String desc;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getDesc() {
-            return desc;
-        }
-
-        public void setDesc(String desc) {
-            this.desc = desc;
-        }
+        return "redirect:/course/"+course.getId();
     }
 }
