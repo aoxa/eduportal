@@ -1,12 +1,7 @@
 <h5 class="border-bottom">Grupos</h5>
 <div>
-    <div class="form-group">
-    <#if ! groups?has_content>
-        No hay groupos cargados
-    </#if>
-    <#list groups as group>
-        <div>${group.name} <i class="far fa-edit"></i></div>
-    </#list>
+    <div id="group-list-content" class="form-group">
+    <#include "partial/group-list.ftl" />
     </div>
     <button data-original-title="Agregar nuevo elemento" data-placement="top" type="button"
             class="btn btn-primary" id="add-group-button"
@@ -19,14 +14,50 @@
     <div class="form-group">
     <#if ! roles?has_content>
         No hay groupos cargados
+    <#else>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Role Name</th>
+            </tr>
+            </thead>
+            <tbody>
+                <#list roles as role>
+                <tr>
+                    <th scope="row">${role.id}</th>
+                    <td>${role.name}</td>
+                </tr>
+                </#list>
+            </tbody>
+        </table>
     </#if>
-    <#list roles as role>
-        <div>${role.name}</div>
-    </#list>
     </div>
 </div>
 
 <!-- modals -->
+<div id="group-remove-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     aria-labelledby="groupModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="groupModalLabel">Eliminar grupo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                El grupo sera eliminado. Esta seguro?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button id="remove-group" class="btn btn-primary" type="button">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="group-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
      aria-labelledby="groupModalLabel">
     <div class="modal-dialog" role="document">
@@ -86,8 +117,26 @@
         $("#name").val("");
     });
 
+    $('#group-remove-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var groupId = button.data('whatever') // Extract info from data-* attributes
+
+        $("#remove-group").attr("group-to-remove", groupId);
+    });
+
+    $("#remove-group").click(function () {
+        var groupId = $("#remove-group").attr("group-to-remove");
+
+        var url = "<@spring.url "/admin/groups/remove/" />" + groupId;
+
+        $.get(url, function (data) {
+            $("#group-list-content").html(data);
+        });
+
+        $("#group-remove-modal").modal('toggle');
+    });
+
     $("#add-group").click(function () {
-        console.log("click");
         var content = {};
         content.name = $("input[name='name']").val();
         content.roles = [];
@@ -111,6 +160,7 @@
             },
             success: function (data) {
                 $("#group-modal").modal('toggle');
+                $("#group-list-content").html(data);
             }
         });
 

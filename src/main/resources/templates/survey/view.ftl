@@ -11,13 +11,8 @@
 <body>
 
 <#include "../includes/nav-bar.ftl"/>
+<#include "../includes/node.sub-nav-bar.ftl" />
 
-<div class="nav-scroller bg-white box-shadow">
-    <nav class="nav nav-underline">
-        <a class="nav-link" href="/">Dashboard</a>
-        <a class="nav-link" href="<@spring.url '/course/${node.course.id}' />">volver al curso</a>
-    </nav>
-</div>
 <main class="container white">
     <div class="row">
         <div class="col-sm-8">
@@ -63,14 +58,16 @@
 </#list>
 </main>
 
+<#if canEdit(node)>
 <button id="fab-edit" type="button"
-        class="btn btn-success bottom-right-floating btn-circle btn-xl"
-><i class="far fa-edit"></i>
+        class="btn btn-success bottom-right-floating btn-circle btn-xl">
+    <i class="far fa-edit"></i>
 </button>
 <script>
     $("#fab-edit").click(function () {
         window.location = '<@spring.url '/${node.type?lower_case}/${node.id}/edit' />';
     });
-
 </script>
+</#if>
+
 </body>

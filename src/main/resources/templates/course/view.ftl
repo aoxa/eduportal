@@ -5,11 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title>${course.name}</title>
-    <link href="<@spring.url '/resources/css/bootstrap.min.css' />" rel="stylesheet">
-    <link href="<@spring.url '/resources/css/common.css' />" rel="stylesheet">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="<@spring.url '/resources/js/bootstrap.min.js' />"></script>
+<#include '../includes/head-includes.ftl'/>
 </head>
 
 <body>
@@ -20,7 +16,6 @@
     <div class="row">
         <div class="col-sm-8">
             <h2>${course.name}</h2>
-            <a href="<@spring.url '/${course.id}/survey/add' />">Agregar nuevo</a>
 
         <#list course.nodes as node>
             <div class="row">
@@ -29,24 +24,50 @@
         </#list>
         </div>
         <div class="col-sm-4">
-            <h4>Autoridades del curso</h4>
+            <h4>Autoridades del curso
+            <#if hasAuthority('admin')>
+                <button class="btn btn-info" data-toggle="modal"
+                        data-target="#add-authority-modal"><i class="fa fa-plus"></i> Agregar
+                </button>
+            </#if>
+            </h4>
         <#list course.authorities as authority>
             <div>${authority.username}</div>
         </#list>
         </div>
     </div>
-    <div class="row">
-    <#if hasAuthority('admin')>
-        <form method="post" action="<@spring.url '/course/${course.id}/authority/add' />">
-            Ingrese una autoridad del curso
-            <input name="user">
-            <input type="hidden"
-                   name="${_csrf.parameterName}"
-                   value="${_csrf.token}"/>
-            <button type="submit">save</button>
-        </form>
-    </#if>
+
+<#if hasAuthority('admin')>
+    <div id="add-authority-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+         aria-labelledby="addAuthModalLabel">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="post" action="<@spring.url '/course/${course.id}/authority/add' />">
+                    <div class="modal-header">
+                        <h5 id="addAuthModalLabel">Agregar autoridad</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Ingrese una autoridad del curso</label>
+
+                            <input class="form-control" name="user">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden"
+                                   name="${_csrf.parameterName}"
+                                   value="${_csrf.token}"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button class="btn btn-primary" type="submit">Enviar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+</#if>
 </main>
 
 </body>

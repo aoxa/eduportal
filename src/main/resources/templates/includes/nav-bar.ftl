@@ -12,11 +12,25 @@
 
     <div class="navbar-nav flex-row ml-md-auto d-none d-md-flex" id="navbarsExample04">
         <ul class="navbar-nav mr-auto">
+        <#if nodeTypes?? && isAuthority>
+            <li class="nav-item">
+                <div class="btn-group" role="group">
+                    <button id="create-node-btn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Crear nuevo
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="create-node-btn">
+                        <#list nodeTypes as nodeType>
+                            <a class="dropdown-item" href="<@spring.url "/${course.id}/${nodeType.type}/add" />">${nodeType.name}</a>
+                        </#list>
+                    </div>
+                </div>
+            </li>
+        </#if>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown04">
+                <a class="nav-link dropdown-toggle" id="menu-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${currentUser().username}</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="menu-user">
                     <a class="dropdown-item" onclick="document.forms['logoutForm'].submit()">Logout</a>
-                    <#if hasAuthority('admin')><a class="dropdown-item" href="<@spring.url '/admin/dashboard' />">Admin</a></#if>
+                <#if hasAuthority('admin')><a class="dropdown-item" href="<@spring.url '/admin/dashboard' />">Admin</a></#if>
                 </div>
             </li>
         </ul>

@@ -15,24 +15,11 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <script src='https://cdn.jsdelivr.net/npm/froala-editor@2.9.5/js/froala_editor.min.js'></script>
-
-    <style>
-        #elements {
-            background-color: white;
-            border-radius: .3rem;
-            webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
-            -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
-        }
-
-        .element {
-            padding: 10px 0 10px;
-        }
-    </style>
 </head>
 <body>
 
 <#include "../includes/nav-bar.ftl" />
+<#include "../includes/node.sub-nav-bar.ftl" />
 
 <main role="main" class="container">
 

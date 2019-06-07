@@ -21,24 +21,42 @@
 
     <form method="POST" class="form-signin">
     <@spring.bind "userForm" />
-        <h2 class="form-signin-heading">Create your account</h2>
-            <div class="form-group ">
-                <@spring.formInput "userForm.username" />
-                <@spring.showErrors "" />
-            </div>
-            <div class="form-group ">
-                <@spring.formPasswordInput "userForm.password" />
-                <@spring.showErrors "" />
-            </div>
-            <div class="form-group ">
-                <@spring.formPasswordInput "userForm.passwordConfirm" />
-                <@spring.showErrors "" />
-            </div>
+        <h2 class="form-signin-heading">Hola ${userForm.email} cree la cuenta</h2>
+    <@spring.formHiddenInput "userForm.id" />
+    <@spring.formHiddenInput "userForm.roles" />
+    <@spring.formHiddenInput "userForm.groups" />
+    <@spring.formHiddenInput "userForm.email" />
+        <input type="hidden" id="active" name="active" value="true">
 
-            <input type="hidden"
-                   name="${_csrf.parameterName}"
-                   value="${_csrf.token}"/>
+        <div class="form-group ">
+            <label>Nombre de usuario</label>
+        <@spring.formInput "userForm.username" />
+        <@spring.showErrors "" />
+        </div>
+        <div class="form-group ">
+            <label>Nombres</label>
+        <@spring.formInput "userForm.name" />
+        <@spring.showErrors "" />
+        </div>
+        <div class="form-group ">
+            <label>Apellido</label>
+        <@spring.formInput "userForm.lastName" />
+        <@spring.showErrors "" />
+        </div>
+        <div class="form-group ">
+            <label>Contrasenia</label>
+        <@spring.formPasswordInput "userForm.password" />
+        <@spring.showErrors "" />
+        </div>
+        <div class="form-group ">
+            <label>Confirmar Contrasenia</label>
+        <@spring.formPasswordInput "userForm.passwordConfirm" />
+        <@spring.showErrors "" />
+        </div>
 
+        <input type="hidden"
+               name="${_csrf.parameterName}"
+               value="${_csrf.token}"/>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
     </form>

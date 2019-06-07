@@ -22,9 +22,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @Interceptor
@@ -52,6 +50,43 @@ public class MacroInterceptor extends HandlerInterceptorAdapter {
 
             return hasRole ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
         });
+
+        macros.put("hasAnyAuthority", (params) -> {
+            final UserDetailService.UserDetailsWrapper wrapper = (UserDetailService.UserDetailsWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            final Set<String> roleNames = new HashSet<>();
+
+            for(Object param : params) {
+                roleNames.add((String) DeepUnwrap.permissiveUnwrap((TemplateModel) param));
+            }
+
+            boolean hasRole = false;
+
+            for (Role roles : wrapper.getUser().getRoles()) {
+                hasRole |= roleNames.contains(roles.getName());
+            }
+
+            return hasRole ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
+        });
+
+        macros.put("hasAllAuthorities", (params) -> {
+            final UserDetailService.UserDetailsWrapper wrapper = (UserDetailService.UserDetailsWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            final Set<String> roleNames = new HashSet<>();
+
+            for(Object param : params) {
+                roleNames.add((String) DeepUnwrap.permissiveUnwrap((TemplateModel) param));
+            }
+
+            boolean hasRole = !wrapper.getUser().getRoles().isEmpty();
+
+            for (Role roles : wrapper.getUser().getRoles()) {
+                hasRole &= roleNames.contains(roles.getName());
+            }
+
+            return hasRole ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
+        });
+
         macros.put("currentUser", (params)->{
             Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -62,6 +97,7 @@ public class MacroInterceptor extends HandlerInterceptorAdapter {
             }
             else return null;
         });
+
         macros.put("getSetting", (params) -> {
             Optional<Settings> setting = settingsRepository.findById(params.get(0).toString());
             return setting.isPresent()? setting.get().getValue():null;
