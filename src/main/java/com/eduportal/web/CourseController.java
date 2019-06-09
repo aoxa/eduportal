@@ -51,9 +51,6 @@ public class CourseController {
     private SecurityService securityService;
 
     @Autowired
-    private NodeRepository nodeRepository;
-
-    @Autowired
     private NodeTypeService nodeTypeService;
 
     @GetMapping("{course}")

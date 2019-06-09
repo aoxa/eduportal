@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <script src='https://cdn.jsdelivr.net/npm/froala-editor@2.9.5/js/froala_editor.min.js'></script>
+    <script src="<@spring.url '/resources/js/node.functions.js' />"></script>
 </head>
 <body>
 
@@ -154,12 +155,10 @@
            data-placement="right"></i>
     </div>
 </div>
-<script>
+<script type="application/javascript">
     updateElements = function () {
         var panelList = $('#elements');
         panelList.sortable({
-            // Only make the .panel-heading child elements support dragging.
-            // Omit this to make then entire <li>...</li> draggable.
             handle: '.panel-heading',
             update: function (event, ui) {
                 $('.element', panelList).each(function (index, elem) {
@@ -167,65 +166,6 @@
                 });
             }
         });
-    };
-
-    var createElement = function (e, nombre) {
-        var nombre = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 9) + '-';
-        var element = new Object();
-        element.weight = parseInt($(e).attr('element-weight'));
-        element.name = nombre + $(e).attr('element-weight');
-        element.title = $(e).find(".element-title").text();
-        element.tip = $(e).find('.element-tip').attr('data-original-title');
-        element.options = [];
-
-        var elementType = $(e).find(".element-type").attr('element-type');
-
-        switch (elementType) {
-            case 'radio':
-                element.type = 'select';
-                element.radioButton = true;
-                $(e).find('input[type=radio]').each(function (i, e) {
-                    var value = {};
-                    value.type = "option"
-                    value.name = $(e).val();
-                    value.title = $(e).val();
-                    value.value = $(e).val();
-                    value.selected = $(e).is(':checked');
-                    element.options.push(value);
-                });
-                break;
-            case 'checkbox':
-                element.type = 'select';
-                element.checkBox = true;
-
-                $(e).find('input[type=checkbox]').each(function (i, e) {
-                    var value = {};
-                    value.type = "option";
-                    value.name = $(e).val();
-                    value.title = $(e).val();
-                    value.value = $(e).val();
-                    value.selected = $(e).is(':checked');
-                    element.options.push(value);
-                });
-                break;
-            case 'select':
-                element.type = 'select';
-                var attr = $(e).find("select").attr('multiple')
-                element.multivalued = (typeof attr !== typeof undefined)
-
-                $(e).find('option').each(function (i, option) {
-                    var value = {};
-                    value.type = "option";
-                    value.name = $(option).val();
-                    value.title = $(option).val();
-                    value.value = $(option).val();
-                    value.selected = $(option).is(':selected');
-                    element.options.push(value);
-                });
-                break;
-        }
-
-        return element;
     };
 
     $(function () {
@@ -237,16 +177,7 @@
         $('#fab-add').tooltip();
         $("#publish").click(function () {
 
-            var content = {};
-
-            content.body = $("#editor").val();
-            content.description = $("#editor").val();
-            content.title = $("#titulo").val();
-            content.limitDate = $("#limite").datepicker( "getDate" );
-            content.elements = [];
-            $("#elements .row").each(function (indice, e) {
-                content.elements.push(createElement(e));
-            });
+            var content = createSurveyContent();
 
             $.ajax({
                 type: "POST",

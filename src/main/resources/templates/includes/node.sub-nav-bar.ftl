@@ -3,7 +3,12 @@
         <#if subNavElements??>
         <#else>
                 <a class="nav-link" href="/">Dashboard</a>
-                <a class="nav-link" href="<@spring.url '/course/${node.course.id}' />">volver al curso</a>
+                <#if node??>
+                    <a class="nav-link" href="<@spring.url '/course/${node.course.id}' />">volver al curso</a>
+                <#elseif course??>
+                    <a class="nav-link" href="<@spring.url '/course/${course.id}' />">volver al curso</a>
+                </#if>
+
         </#if>
     </nav>
 </div>

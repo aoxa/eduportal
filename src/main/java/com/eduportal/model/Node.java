@@ -1,5 +1,7 @@
 package com.eduportal.model;
 
+import com.eduportal.model.base.BaseEntity;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -7,7 +9,7 @@ import java.util.Date;
 @Table(name = "nodo")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
-public class Node {
+public class Node extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

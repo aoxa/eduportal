@@ -1,77 +1,207 @@
-<#import "/spring.ftl" as spring />
+<h5 class="border-bottom">Invitar usuario</h5>
+<div class="section-content">
+    <button class="btn btn-info"  data-toggle="modal"
+            data-target="#invite-user-modal"><i class="fa fa-user-plus"></i> Invitar Usuario</button>
+</div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>${course.name}</title>
-<#include "../includes/head-includes.ftl" />
-</head>
+<h5 class="border-bottom">Editar usuario</h5>
+<div class="section-content">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Username</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <#list users as user>
+        <tr>
+            <th scope="row">${user.id}</th>
+            <td>${user.username!"not set yet"}</td>
+            <td>
+                <i class="far fa-edit" style="cursor:pointer" data-whatever="${user.id}" data-toggle="modal"
+                   data-target="#user-info-modal"></i>
+                <#if !(user.active??) || !user.active>
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                </#if>
+            </td>
+        </tr>
+        </#list>
 
-<body>
+        </tbody>
+    </table>
+</div>
+<h5 class="border-bottom">Asignar grupo</h5>
+<div class="section-content">
+    <div class="form-group">
+        <label>Nombre de usuario</label>
+        <input class="form-control" id="user-complete">
+    </div>
+    <div class="form-group">
+        <label>Nombre del grupo</label>
+        <input class="form-control" id="group-complete">
+    </div>
+    <button id="map-user" class="btn btn-success">Agregar</button>
+</div>
 
-<#include "../includes/nav-bar.ftl" />
-
-<main role="main" class="container white">
-    <div class="row">
-        <div class="col-sm-8">
-            <h2>${course.name}</h2>
-        <#if isAuthority>
-            <a href="<@spring.url '/${course.id}/survey/add' />">Agregar nuevo</a>
-        </#if>
-
-        <#list course.nodes as node>
-            <div class="row">
-                <a href="<@spring.url '/node/${node.id}' />">${node.title}</a>
+<div id="invite-user-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     aria-labelledby="inviteUserModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userInfoModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </#list>
-        </div>
-        <div class="col-sm-4">
-            <h4 style="display: inline-block">Autoridades del curso</h4>
-        <#if hasAuthority('admin')>
-            <button class="btn btn-info" data-toggle="modal"
-                    data-target="#add-authority-modal"><i class="fa fa-plus"></i> Agregar
-            </button>
-        </#if>
-
-        <#list course.authorities as authority>
-            <div>${authority.username}</div>
-        </#list>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>E-mail del usuario</label>
+                    <input class="form-control" id="user-email">
+                </div>
+                <div class="form-group">
+                    <label>Grupos del usuario</label>
+                    <input class="form-control" id="user-group">
+                </div>
+                <div class="form-group">
+                    <label>Roles del usuario</label>
+                    <input class="form-control" id="user-roles">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-primary" type="button">Enviar</button>
+            </div>
         </div>
     </div>
+</div>
 
-<#if hasAuthority('admin')>
-    <div id="add-authority-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-         aria-labelledby="addAuthModalLabel">
-
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form method="post" action="<@spring.url '/course/${course.id}/authority/add' />">
-                    <div class="modal-header">
-                        <h5 id="addAuthModalLabel">Agregar autoridad</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Ingrese una autoridad del curso</label>
-
-                            <input class="form-control" name="user">
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden"
-                                   name="${_csrf.parameterName}"
-                                   value="${_csrf.token}"/>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button class="btn btn-primary" type="submit">Enviar</button>
-                        </div>
-                    </div>
-                </form>
+<div id="user-info-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+     aria-labelledby="userInfoModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userInfoModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Grupos del usuario</h6>
+                <div id="group-info" class="row">
+                </div>
+                <h6>Roles del usuario</h6>
+                <div id="role-info" class="row">
+                </div>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>
-</#if>
-</main>
+</div>
 
-</body>
-</html>
+<script>
+    $("#invite-user-modal .btn-primary").click(function(){
+
+        var content = {};
+        content.email = $("#user-email").val();
+        content.groups = $("#user-group").val().split(",");
+        content.roles = $("#user-roles").val().split(",");
+
+        $.ajax({
+            type: "POST",
+            url: "<@spring.url '/admin/users/invite' />",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('${_csrf.headerName}', "${_csrf.token}");
+            },
+            data: JSON.stringify(content),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function(data, textStatus, request) {
+            }
+        });
+    });
+
+    $("#map-user").click(function () {
+        var user = $("#user-complete").val();
+        var group = $("#group-complete").val();
+        $.get("<@spring.url "/admin/users/map" />?user=" + user + "&group=" + group);
+    });
+
+    $('#user-info-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var userId = button.data('whatever') // Extract info from data-* attributes
+
+        var $modal = $(this);
+        $modal.find("#role-info").empty();
+        $modal.find("#group-info").empty();
+
+        $.get("<@spring.url "/api/users/" />" + userId + ".json", function (data) {
+            $modal.find("#userInfoModalLabel").text(data.username);
+            var roles = new Set();
+            console.log(data.groups);
+            for (var i = 0; i < data.groups.length; i++) {
+                var group = data.groups[i];
+
+                var $element = $("<div>");
+                $element.addClass("col-sm-4");
+                $element.text(group.name);
+                for (var j = 0; j < group.roles.length; j++) {
+                    var role = group.roles[j];
+                    roles.add(role.name);
+                }
+                $modal.find("#group-info").append($element);
+            }
+
+            for (var i = 0; i < data.roles.length; i++) {
+                roles.add(data.roles[i].name);
+            }
+
+            roles.forEach(function (role) {
+                var $element = $("<div>");
+                $element.addClass("col-sm-4");
+                $element.text(role);
+                $modal.find("#role-info").append($element);
+            });
+        });
+    });
+
+    input = document.getElementById("user-complete");
+
+    new Awesomplete(input, {
+        list: [
+        <#list users as user>
+            {label: "${user.username!"not set yet"}", value: "${user.id}"}<#if !user?is_last>,</#if>
+        </#list>]
+    });
+
+    var input = document.getElementById("user-roles");
+
+    new Awesomplete(input, {
+        list: [
+        <#list roles as role>
+            {label: "${role.name}", value: "${role.id}"}<#if !role?is_last>,</#if>
+        </#list>]
+    });
+
+    input = document.getElementById("user-group");
+
+    new Awesomplete(input, {
+        list: [
+        <#list groups as group>
+            {label: "${group.name}", value: "${group.id}"}<#if !group?is_last>,</#if>
+        </#list>]
+    });
+
+    input = document.getElementById("group-complete");
+
+    new Awesomplete(input, {
+        list: [
+        <#list groups as group>
+            {label: "${group.name}", value: "${group.id}"}<#if !group?is_last>,</#if>
+        </#list>]
+    });
+</script>

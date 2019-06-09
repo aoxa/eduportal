@@ -1,20 +1,22 @@
 package com.eduportal.web;
 
+import com.eduportal.auth.service.SecurityService;
 import com.eduportal.model.Course;
 import com.eduportal.model.Node;
 import com.eduportal.model.Survey;
+import com.eduportal.model.SurveyReply;
 import com.eduportal.model.partial.Element;
 import com.eduportal.model.partial.Option;
 import com.eduportal.model.partial.Select;
 import com.eduportal.repository.CourseRepository;
+import com.eduportal.repository.NodeReplyRepository;
 import com.eduportal.repository.NodeRepository;
+import com.eduportal.repository.SurveyReplyRepository;
+import com.eduportal.service.node.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +28,16 @@ import java.util.List;
 public class NodeController {
 
     @Autowired
-    private NodeRepository nodeRepository;
+    private NodeService nodeService;
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private SecurityService securityService;
+
+    @Autowired
+    private NodeReplyRepository<SurveyReply> surveyReplyRepository;
 
     @GetMapping("/{course}/{type}/add")
     public String displayAdd(Model model, @PathVariable("course") Course course,
@@ -64,7 +72,7 @@ public class NodeController {
 
         course.getNodes().add(survey);
 
-        nodeRepository.save(survey);
+        nodeService.saveOrUpdate(survey);
 
         courseRepository.save(course);
 
@@ -74,6 +82,27 @@ public class NodeController {
         model.addAttribute("type", "survey");
 
         return "survey/new-element";
+    }
+
+    @PostMapping("/{course}/survey/{node}")
+    public String edit(Model model, @PathVariable("node") Survey node) {
+        model.addAttribute("node", node);
+
+        return node.getType().toLowerCase() + "/view";
+    }
+
+    @PutMapping("/{course}/survey/{node}")
+    public String reply(Model model, @PathVariable("course") Course course,
+                        @PathVariable("node") Node node, @RequestBody SurveyReply surveyReply) {
+        model.addAttribute("node", node);
+
+        surveyReply.setUser(securityService.findLoggedInUser());
+
+        surveyReply.setParent((Survey)node);
+
+        surveyReplyRepository.save(surveyReply);
+
+        return node.getType().toLowerCase() + "/view";
     }
 
     protected static String createURL(HttpServletRequest request, String resourcePath) {
@@ -100,159 +129,5 @@ public class NodeController {
 
         return result.toString();
 
-    }
-    /*
-    public String addSurvey(@PathVariable("course") Course course, @RequestBody ContentDTO content) {
-        Survey survey = new Survey();
-        survey.setDescription(content.getDescription());
-        survey.setTitle(content.getTitle());
-        survey.setCourse(course);
-        survey.setElements(new HashSet<Element>());
-        content.getElements().forEach(el -> {
-            Element element = null;
-            switch (el.getType()) {
-                case "checkbox":
-                    Select sel = new Select();
-                    sel.setCheckBox(true);
-                    sel.setOptions(new HashSet<>());
-                    el.getValues().forEach( val -> {
-                        Option op = new Option();
-                        op.setName(val.value);
-                        op.setBoolValue(val.valid);
-                        op.setValue(val.valid.toString());
-                        sel.getOptions().add(op);
-                            });
-                    element = sel;
-
-                    break;
-                case "radio":
-                    Select s = new Select();
-                    s.setRadioButton(true);
-                    s.setOptions(new HashSet<>());
-                    el.getValues().forEach( val -> {
-                        Option op = new Option();
-                        op.setName(val.value);
-                        op.setBoolValue(val.valid);
-                        op.setValue(val.valid.toString());
-                        s.getOptions().add(op);
-                            });
-                    element = s;
-                    break;
-            }
-            survey.getElements().add(element);
-        });
-
-        nodeRepository.save(survey);
-
-        return "survey/new-element";
-    }
-    */
-
-    public static class ContentDTO {
-        private String description;
-        private String title;
-        private List<ElementDTO> elements;
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public List<ElementDTO> getElements() {
-            return elements;
-        }
-
-        public void setElements(List<ElementDTO> elements) {
-            this.elements = elements;
-        }
-    }
-
-    public static class ElementDTO {
-        private String weight;
-        private String name;
-        private String title;
-        private String type;
-        private String tip;
-        private List<ValueDTO> values;
-
-        public String getWeight() {
-            return weight;
-        }
-
-        public void setWeight(String weight) {
-            this.weight = weight;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getTip() {
-            return tip;
-        }
-
-        public void setTip(String tip) {
-            this.tip = tip;
-        }
-
-        public List<ValueDTO> getValues() {
-            return values;
-        }
-
-        public void setValues(List<ValueDTO> values) {
-            this.values = values;
-        }
-    }
-
-    public static class ValueDTO {
-        private String value;
-        private Boolean valid;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        public Boolean getValid() {
-            return valid;
-        }
-
-        public void setValid(Boolean valid) {
-            this.valid = valid;
-        }
     }
 }

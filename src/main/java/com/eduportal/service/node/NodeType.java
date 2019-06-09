@@ -8,4 +8,5 @@ public interface NodeType {
     String getType();
     String getName();
     Role getEditRole();
+    Role getAnswerRole();
 }

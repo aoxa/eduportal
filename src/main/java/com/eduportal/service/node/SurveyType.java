@@ -8,10 +8,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 
 @Component
 public class SurveyType implements NodeType {
     private Role editRole;
+    private Role answerRole;
 
     @Autowired
     private MessageSource messageSource;
@@ -25,19 +27,34 @@ public class SurveyType implements NodeType {
     @PostConstruct
     public void init() {
         nodeTypeService.register(this);
-        editRole = roleRepository.findByName(getRoleName());
-        if(null == editRole) {
-            editRole = new Role();
-            editRole.setName(getRoleName());
-            editRole.setType(Role.Type.node);
 
-            roleRepository.save(editRole);
+        editRole = roleRepository.findByName(getEditRoleName());
+        if(null == editRole) {
+            editRole = buildRole(getEditRoleName());
         }
 
+        answerRole = roleRepository.findByName(getAnswerRoleName());
+        if(null == answerRole) {
+            answerRole = buildRole(getAnswerRoleName());
+        }
     }
 
-    private String getRoleName() {
+    private Role buildRole(String roleName) {
+        Role role = new Role();
+        role.setName(roleName);
+        role.setType(Role.Type.node);
+
+        roleRepository.save(role);
+
+        return role;
+    }
+
+    private String getEditRoleName() {
         return "edit_" + getType();
+    }
+
+    private String getAnswerRoleName() {
+        return "answer_" + getType();
     }
 
     @Override
@@ -57,6 +74,11 @@ public class SurveyType implements NodeType {
 
     @Override
     public Role getEditRole() {
+        return editRole;
+    }
+
+    @Override
+    public Role getAnswerRole() {
         return editRole;
     }
 }

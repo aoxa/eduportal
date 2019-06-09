@@ -47,6 +47,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:version
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version:version
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version:version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version:version
 
     compile group: 'javax.servlet', name: 'jstl', version:'1.2'
     compile group: 'com.sun.mail', name: 'javax.mail'

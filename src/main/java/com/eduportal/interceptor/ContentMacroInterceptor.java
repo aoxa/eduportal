@@ -41,6 +41,19 @@ public class ContentMacroInterceptor  extends AbstractMacroInterceptor {
 
             return userHasRole ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
         });
+        macros.put("canAnswer", (params)-> {
+            if(! SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) return TemplateBooleanModel.FALSE;
+
+            final User user = ((UserDetailService.UserDetailsWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+
+            Node node = (Node) DeepUnwrap.permissiveUnwrap((TemplateModel) params.get(0));
+            NodeType nodeType = nodeTypeService.getNodeTypeService(node.getClass());
+
+            boolean userHasRole = node.getCourse().getEnrolled().contains(user) &&
+                    user.getAllRoles().contains(nodeType.getAnswerRole());
+
+            return userHasRole ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
+        });
 
         macros.put("nodeDescriptor", (params)-> {
             Node node = (Node) DeepUnwrap.permissiveUnwrap((TemplateModel) params.get(0));
