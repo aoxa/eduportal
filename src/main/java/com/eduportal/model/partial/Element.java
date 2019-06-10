@@ -18,7 +18,6 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Element {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

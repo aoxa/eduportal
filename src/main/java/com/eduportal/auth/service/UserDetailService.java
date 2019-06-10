@@ -37,16 +37,14 @@ public class UserDetailService implements UserDetailsService {
 
         return new UserDetailsWrapper(
                 user,
-                user.getUsername(),
-                user.getPassword(),
                 grantedAuthorities);
     }
 
     public static class UserDetailsWrapper extends org.springframework.security.core.userdetails.User {
         private final User user;
-        public UserDetailsWrapper(User user, String username, String password,
+        public UserDetailsWrapper(User user,
                     Collection<? extends GrantedAuthority> authorities) {
-            super(username, password, true, true, true, true, authorities);
+            super(user.getUsername(), user.getPassword(), true, true, true, true, authorities);
             this.user = user;
         }
 

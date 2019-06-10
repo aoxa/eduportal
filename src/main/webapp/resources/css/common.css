@@ -100,3 +100,12 @@ body {
 .element {
     padding: 10px 0 10px;
 }
+
+.element .element-title {
+    line-height: 40px;
+}
+
+.element i.fa-question-circle,
+.element i.fa-arrows-alt-v {
+    margin-top: 14px;
+}

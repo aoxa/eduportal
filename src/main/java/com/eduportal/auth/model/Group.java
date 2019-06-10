@@ -3,6 +3,7 @@ package com.eduportal.auth.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -14,10 +15,10 @@ public class Group {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "groups")
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     private String name;
 

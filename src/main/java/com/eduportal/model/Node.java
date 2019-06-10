@@ -10,10 +10,6 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 public class Node extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(updatable = false, insertable = false)
     private String type;
 
@@ -22,19 +18,13 @@ public class Node extends BaseEntity {
 
     private String title;
 
+    @Lob
+    @Column(columnDefinition = "text")
     private String body;
 
     private String description;
 
     private Date limitDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Course getCourse() {
         return course;

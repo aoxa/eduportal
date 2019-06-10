@@ -13,10 +13,6 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 public class NodeReply<T extends Node> extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @OneToOne
     private User user;
 
@@ -41,15 +37,6 @@ public class NodeReply<T extends Node> extends BaseEntity {
     public void setParent(T parent) {
         this.parent = parent;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
 
     public String getType() {
         return type;

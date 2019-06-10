@@ -12,13 +12,17 @@ import java.util.Date;
 @Component
 public class ModelDateUpdateAspect {
 
-    @Before("execution(* com.eduportal.repository.NodeRepository.save(..))")
     public void updateTime(JoinPoint joinPoint) {
         BaseEntity entity = (BaseEntity) joinPoint.getArgs()[0];
-        if(entity.getCreationDate() != null) {
+        if(entity.getCreationDate() == null) {
             entity.setCreationDate(new Date());
         }
 
         entity.setModificationDate(new Date());
+    }
+
+    @Before("@annotation(com.eduportal.annotation.DateUpdatableModel) ")
+    public void updateTimeAnnotated(JoinPoint joinPoint) {
+        updateTime(joinPoint);
     }
 }

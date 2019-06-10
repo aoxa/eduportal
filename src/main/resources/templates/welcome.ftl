@@ -19,10 +19,10 @@
         </div>
         <div class="offset-1 container white col-sm-4">
             <h4>Mis cursos</h4>
-        <#if !courses?has_content>
+        <#if !userCourses()?has_content>
             Usted no esta suscripto a ningun curso
         </#if>
-        <#list courses as course>
+        <#list userCourses() as course>
             <p><a href="<@spring.url '/course/${course.id}' />">${course.name}</a><p>
         </#list>
 

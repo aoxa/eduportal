@@ -11,4 +11,6 @@ import java.util.Set;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("from Course c where c.neededRole in (?1)")
     List<Course> findAllForUserRoles(Set<Role> roles);
+
+    List<Course> findCoursesByNeededRoleIn(List<Role> userRoles);
 }

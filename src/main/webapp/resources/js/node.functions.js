@@ -2,7 +2,6 @@ var createSurveyContent = function() {
     var content = {};
 
     content.body = $("#editor").val();
-    content.description = $("#editor").val();
     content.title = $("#titulo").val();
     content.limitDate = $("#limite").datepicker( "getDate" );
     content.elements = [];

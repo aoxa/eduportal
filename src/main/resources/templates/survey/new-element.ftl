@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <title>Crear nueva asignatura</title>
 
-    <#include "../includes/head-includes.ftl" />
+<#include "../includes/head-includes.ftl" />
 
     <link href='https://cdn.jsdelivr.net/npm/froala-editor@2.9.5/css/froala_editor.min.css' rel='stylesheet'
           type='text/css'/>
@@ -29,17 +29,18 @@
     <div class="row">
         <div class="col-sm-9">
             <h3>Ingrese el titulo de la asignatura</h3>
-            <input id="titulo" type="text" class="form-control" placeholder="Ingrese el titulo aqui"<#if node??>value="${node.title}" </#if>>
+            <input id="titulo" type="text" class="form-control" placeholder="Ingrese el titulo aqui"
+                   <#if node??>value="${node.title}" </#if>>
         </div>
         <div class="col-sm-3">
             <label>Fecha de entrega</label>
-            <input id="limite" type="text" class="form-control" >
+            <input id="limite" type="text" class="form-control">
         </div>
     </div>
 
     <div class="row">
         <textarea id="editor">
-        <#if node??>${node.description}</#if>
+        <#if node??>${node.body}</#if>
         </textarea>
     </div>
 
@@ -52,7 +53,7 @@
                     <i class="fas fa-arrows-alt-v"></i>
                 </div>
                 <div class="element-title col-sm-5">${element.title}</div>
-                <#if element.type = "Select">
+                <#if element.type == "Select">
                     <#if element.radioButton>
                         <div class="element-type col-sm-5" element-type="radio">
                             <#list element.options as option>
@@ -91,8 +92,9 @@
                 </#if>
 
                 <div class="col-sm-1">
-                    <i data-toggle="tooltip" class="far fa-question-circle element-tip" data-original-title="${element.tip}" data-placement="right"></i>
-                    <a class="edit-element" href="#"><i class="far fa-edit" ></i></a>
+                    <i data-toggle="tooltip" class="far fa-question-circle element-tip"
+                       data-original-title="${element.tip}" data-placement="right"></i>
+                    <a class="edit-element" href="#"><i class="far fa-edit"></i></a>
                 </div>
             </div>
         </#list>
@@ -173,13 +175,16 @@
             dateFormat: "dd/mm/yy",
             minDate: new Date()
         });
-        $('#editor').froalaEditor({width: '100%', placeholderText: 'Ingrese una descripcion para la asignatura'});
+
+            $('#editor').froalaEditor({width: '100%', placeholderText: 'Ingrese una descripcion para la asignatura'});
+
         $('#fab-add').tooltip();
+
         $("#publish").click(function () {
 
             var content = createSurveyContent();
 
-            $.ajax({
+            var xhr = $.ajax({
                 type: "POST",
                 url: "<@spring.url '/${course.id}/${type}/add' />",
                 beforeSend: function (xhr) {
@@ -190,8 +195,10 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                success: function(data, textStatus, request) {
-                    window.location = request.getResponseHeader('location');
+                statusCode: {
+                    201: function (data, textStatus, jqXHR) {
+                        window.location = xhr.getResponseHeader('location');
+                    }
                 }
             });
 
@@ -291,14 +298,18 @@
         $(element).find('[data-toggle="tooltip"]').tooltip();
 
         $("#elements").show();
+
         $("#elements").append(element);
 
         $("#modal-title").val("");
-        $('#modal-tip').val("");
-        $("#modal-multi-content").val("");
-        updateElements();
-        $("#item-modal").modal("hide");
 
+        $('#modal-tip').val("");
+
+        $("#modal-multi-content").val("");
+
+        updateElements();
+
+        $("#item-modal").modal("hide");
     })
 </script>
 </body>

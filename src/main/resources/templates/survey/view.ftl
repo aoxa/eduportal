@@ -14,19 +14,17 @@
 <#include "../includes/nav-bar.ftl"/>
 <#include "../includes/node.sub-nav-bar.ftl" />
 
-<main class="container white">
-    <div class="row">
+<main class="container">
+    <div class="container white row">
         <div class="col-sm-8">
             <h2>${node.title}</h2>
         </div>
         <div class="col-sm-4"><#if node.limitDate??>Entrega: ${node.limitDate?string["dd/MM/yy"]}</#if></div>
-        <div class="col-sm-12">${node.description}</div>
+        <div class="col-sm-12">${node.body}</div>
     </div>
     <div id="elements">
-
-
     <#list node.sortedElements as element>
-        <div class="row" element-name="${element.name}" element-weight="${element.weight}">
+        <div class="row element" element-name="${element.name}" element-weight="${element.weight}">
             <div class="element-title offset-sm-2 col-sm-4">${element.title}</div>
             <div class="col-sm-5">
                 <#if element.type == 'Select'>
