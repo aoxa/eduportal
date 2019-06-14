@@ -1,10 +1,8 @@
 package com.eduportal.web.view.node;
 
 import com.eduportal.auth.service.SecurityService;
-import com.eduportal.model.Course;
-import com.eduportal.model.Node;
-import com.eduportal.model.Survey;
-import com.eduportal.model.SurveyReply;
+import com.eduportal.auth.service.score.SurveyScoreService;
+import com.eduportal.model.*;
 import com.eduportal.repository.CourseRepository;
 import com.eduportal.repository.NodeReplyRepository;
 import com.eduportal.service.node.NodeService;
@@ -34,6 +32,9 @@ public class SurveyController {
     @Autowired
     private NodeReplyRepository<SurveyReply> surveyReplyRepository;
 
+    @Autowired
+    private SurveyScoreService surveyScoreService;
+
     @PostMapping(value = "/{course}/survey/add")
     public @ResponseBody
     ResponseEntity<String> addSurvey(Model model, @PathVariable("course") Course course, @RequestBody Survey survey,
@@ -46,7 +47,7 @@ public class SurveyController {
 
         courseRepository.save(course);
 
-        response.setHeader("location", RequestHelper.createURL(request, "/node/"+survey.getId()));
+        response.setHeader("location", RequestHelper.createURL(request, "/node/" + survey.getId()));
 
         return new ResponseEntity<String>(String.format("Node '%s' created", survey.getTitle()), HttpStatus.CREATED);
     }
@@ -65,10 +66,19 @@ public class SurveyController {
 
         surveyReply.setUser(securityService.findLoggedInUser());
 
-        surveyReply.setParent((Survey)node);
+        surveyReply.setParent((Survey) node);
+
+        surveyReply.setScore(surveyScoreService.calculateScore((Survey) node, surveyReply));
 
         surveyReplyRepository.save(surveyReply);
 
         return node.getType().toLowerCase() + "/view";
+    }
+
+    @GetMapping("/{course}/survey/{node}/reply/{reply}")
+    public String viewReply(Model model, @PathVariable("course") Course course,
+                        @PathVariable("node") Node node, @PathVariable("reply") NodeReply<Survey> surveyReply) {
+        model.addAttribute("node", surveyReply);
+        return node.getType().toLowerCase() + "/reply/view";
     }
 }

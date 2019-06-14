@@ -14,11 +14,11 @@ var createSurveyContent = function() {
 //noinspection JSAnnotator
 function createElement(e, nombre, includeEmpty=true) {
     if(nombre === undefined) {
-        nombre = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 9) + '-';
+        nombre = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 9) + '-' + $(e).attr('element-weight');;
     }
     var element = new Object();
     element.weight = parseInt($(e).attr('element-weight'));
-    element.name = nombre + $(e).attr('element-weight');
+    element.name = nombre;
     element.title = $(e).find(".element-title").text();
     element.tip = $(e).find('.element-tip').attr('data-original-title');
     element.options = [];

@@ -36,11 +36,11 @@
 <div class="section-content">
     <div class="form-group">
         <label>Nombre de usuario</label>
-        <input class="form-control" id="user-complete">
+        <input type="hidden" id="user-complete">
     </div>
     <div class="form-group">
         <label>Nombre del grupo</label>
-        <input class="form-control" id="group-complete">
+        <input type="hidden" id="group-complete">
     </div>
     <button id="map-user" class="btn btn-success">Agregar</button>
 </div>
@@ -62,11 +62,11 @@
                 </div>
                 <div class="form-group">
                     <label>Grupos del usuario</label>
-                    <input class="form-control" id="user-group">
+                    <input type="hidden" id="user-group" multiple>
                 </div>
                 <div class="form-group">
                     <label>Roles del usuario</label>
-                    <input class="form-control" id="user-roles">
+                    <input type="hidden" id="user-roles">
                 </div>
             </div>
             <div class="modal-footer">
@@ -169,39 +169,75 @@
         });
     });
 
-    input = document.getElementById("user-complete");
-
-    new Awesomplete(input, {
-        list: [
-        <#list users as user>
-            {label: "${user.username!"not set yet"}", value: "${user.id}"}<#if !user?is_last>,</#if>
-        </#list>]
+    $("#user-complete").select2({
+        ajax:{
+            url: "<@spring.url "/admin/user/list.json"/>",
+            data: function (term, page) {
+                return {
+                    q: term
+                };
+            },            dataType: "json",
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        width: "100%",
+        minimumInputLength: 2,
+        theme: "classic"
     });
 
-    var input = document.getElementById("user-roles");
-
-    new Awesomplete(input, {
-        list: [
-        <#list roles as role>
-            {label: "${role.name}", value: "${role.id}"}<#if !role?is_last>,</#if>
-        </#list>]
+    $("#user-roles").select2({
+        ajax:{
+            url: "<@spring.url "/admin/role/list.json"/>",
+            data: function (term, page) { // page is the one-based page number tracked by Select2
+                return {
+                    q: term
+                };
+            },            dataType: "json",
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        width: "100%",
+        multiple: true,
+        minimumInputLength: 2,
+        theme: "classic"
     });
 
-    input = document.getElementById("user-group");
-
-    new Awesomplete(input, {
-        list: [
-        <#list groups as group>
-            {label: "${group.name}", value: "${group.id}"}<#if !group?is_last>,</#if>
-        </#list>]
+    $("#user-group").select2({
+        ajax:{
+            url: "<@spring.url "/admin/group/list.json"/>",
+            dataType: "json",
+            data: function (term, page) {
+                return {
+                    q: term
+                };
+            },
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        width: "100%",
+        multiple: true,
+        minimumInputLength: 2,
+        theme: "classic"
     });
 
-    input = document.getElementById("group-complete");
-
-    new Awesomplete(input, {
-        list: [
-        <#list groups as group>
-            {label: "${group.name}", value: "${group.id}"}<#if !group?is_last>,</#if>
-        </#list>]
+    $("#group-complete").select2({
+        ajax:{
+            url: "<@spring.url "/admin/group/list.json"/>",
+            dataType: "json",
+            data: function (term, page) {
+                return {
+                    q: term
+                };
+            },
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        width: "100%",
+        minimumInputLength: 2,
+        theme: "classic"
     });
 </script>

@@ -13,6 +13,8 @@ import java.util.Set;
 @DiscriminatorValue(Survey.TYPE)
 public class SurveyReply extends NodeReply<Survey> {
 
+    private Float score;
+
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Element> elements = new HashSet<>();
 
@@ -24,4 +26,11 @@ public class SurveyReply extends NodeReply<Survey> {
         this.elements = elements;
     }
 
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
+    }
 }

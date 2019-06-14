@@ -8,6 +8,7 @@
 
 <#include "../includes/head-includes.ftl" />
     <script src="<@spring.url '/resources/js/node.functions.js' />"></script>
+    <link href="<@spring.url '/resources/css/form.css' />" rel="stylesheet">
 </head>
 <body>
 
@@ -30,21 +31,19 @@
                 <#if element.type == 'Select'>
                     <#if element.checkBox>
                         <#list element.options as option>
-                            <div class="element-type form-check" element-type="checkbox">
+                            <label class="form-check-label customized-type element-type form-check" element-type="checkbox">${option.value}
                                 <input id="${element.name}-${option.id}" name="${element.name}" value="${option.value}"
                                        type="checkbox" class="form-check-input"/>
-                                <label class="form-check-label"
-                                       for="${element.name}-${option.id}">${option.value}</label>
-                            </div>
+                                <span class="checkmark"></span>
+                            </label>
                         </#list>
                     <#elseif element.radioButton>
                         <#list element.options as option>
-                            <div class="form-check element-type" element-type="radio">
+                            <label class="form-check-label customized-type form-check element-type" element-type="radio">
                                 <input id="${element.name}-${option.id}" name="${element.name}" value="${option.value}"
-                                       type="radio" class="form-check-input"/>
-                                <label for="${element.name}-${option.id}"
-                                       class="form-check-label">${option.value}</label>
-                            </div>
+                                       type="radio" class="form-check-input"/>${option.value}
+                                <span class="radiomark"></span>
+                            </label>
                         </#list>
                     <#else>
                         <select element-type="select" class="form-control element-type" name="${element.name}"
@@ -93,12 +92,32 @@
                     //window.location = request.getResponseHeader('location');
                 }
             });
-
-            console.log(JSON.stringify(content));
-        })
+        });
     </script>
 <#if canAnswer(node)>
 
+</#if>
+<#if isCourseAuthority(node.course)>
+    <div class="container white">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Usuario</th>
+                <th scope="col">Puntaje</th>
+                <th scope="col">Ver respuesta</th>
+            </tr>
+            </thead>
+            <tbody>
+                <#list node.replies as reply>
+                <tr>
+                    <th scope="row">${reply.user.username}</th>
+                    <td>${reply.score} / 100</td>
+                    <td><a href="<@spring.url "/${node.course.id}/survey/${node.id}/reply/${reply.id}" />"><i class="fa fa-link" aria-hidden="true"></i></a></td>
+                </tr>
+                </#list>
+            </tbody>
+        </table>
+    </div>
 </#if>
 </main>
 

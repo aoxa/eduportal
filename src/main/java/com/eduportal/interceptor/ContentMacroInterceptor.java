@@ -19,9 +19,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Interceptor
-@Component
 public class ContentMacroInterceptor  extends AbstractMacroInterceptor {
 
     @Autowired
@@ -32,6 +32,7 @@ public class ContentMacroInterceptor  extends AbstractMacroInterceptor {
 
     @PostConstruct
     public void startUp() {
+
         macros.put("canEdit", (params)-> {
             if(! SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) return TemplateBooleanModel.FALSE;
 
@@ -64,14 +65,32 @@ public class ContentMacroInterceptor  extends AbstractMacroInterceptor {
             return nodeTypeService.getNodeTypeService(node.getClass());
         });
 
-        macros.put("userCourses", (params) -> {
+        macros.put("allUserCourses", (params) -> {
             if(! SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) return Collections.emptyList();
 
             final User user = ((UserDetailService.UserDetailsWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
-            List<Course> courses = courseRepository.findAllForUserRoles(user.getAllRoles());
+            return courseRepository.findAllForUserRoles(user.getAllRoles()).orElse(Collections.emptyList());
+        });
 
-            return courses ==null?Collections.emptyList() : courses;
+        macros.put("availableUserCourses", (params) -> {
+            if(! SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) return Collections.emptyList();
+
+            final User user = ((UserDetailService.UserDetailsWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+
+            return courseRepository.findAllForUserRoles(user.getAllRoles()).orElse(Collections.emptyList()).stream()
+                    .filter(course -> ! course.getEnrolled().contains(user) && ! course.getAuthorities().contains(user))
+                    .collect(Collectors.toList());
+        });
+
+        macros.put("enrolledUserCourses", (params) -> {
+            if(! SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) return Collections.emptyList();
+
+            final User user = ((UserDetailService.UserDetailsWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+
+            return courseRepository.findAllForUserRoles(user.getAllRoles()).orElse(Collections.emptyList()).stream()
+                    .filter(course -> course.getAuthorities().contains(user) || course.getEnrolled().contains(user))
+                    .collect(Collectors.toList());
         });
     }
 }

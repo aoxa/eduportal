@@ -53,4 +53,16 @@ public class Group {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Group)) return false;
+
+        return id.equals(((Group) obj).getId());
+    }
 }

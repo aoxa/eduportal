@@ -10,22 +10,10 @@
     <link rel="icon" href="../../../../favicon.ico">
 
     <title>User configurations</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/dashboard/">
-
-    <!-- Bootstrap core CSS -->
-    <link href="<@spring.url '/resources/css/bootstrap.min.css' />" rel="stylesheet">
+<#assign admin=true />
+<#include "../includes/head-includes.ftl"/>
     <link href="<@spring.url '/resources/css/awesomplete.css' />" rel="stylesheet">
-
-    <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet"
-          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-
-    <link href="<@spring.url '/resources/css/dashboard.css' />" rel="stylesheet">
-    <link href="<@spring.url '/resources/css/admin.css' />" rel="stylesheet">
     <script src="<@spring.url '/resources/js/awesomplete.js' />"></script>
-
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="<@spring.url '/resources/js/bootstrap.bundle.min.js' />"></script>
 </head>
 
 <body>
@@ -67,10 +55,6 @@
     </div>
 </div>
 
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
 
 <!-- Icons -->
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>

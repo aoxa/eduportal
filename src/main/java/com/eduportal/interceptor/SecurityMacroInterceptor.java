@@ -2,8 +2,10 @@ package com.eduportal.interceptor;
 
 import com.eduportal.annotation.Interceptor;
 import com.eduportal.auth.model.Role;
+import com.eduportal.auth.model.User;
 import com.eduportal.auth.repository.UserRepository;
 import com.eduportal.auth.service.UserDetailService;
+import com.eduportal.model.Course;
 import com.eduportal.model.Settings;
 import com.eduportal.repository.SettingsRepository;
 import com.eduportal.web.view.functions.HasAuthority;
@@ -24,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
-@Component
 @Interceptor
 public class SecurityMacroInterceptor extends AbstractMacroInterceptor {
 
@@ -78,6 +79,16 @@ public class SecurityMacroInterceptor extends AbstractMacroInterceptor {
             }
 
             return hasRole ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
+        });
+
+        macros.put("isCourseAuthority", (params)->{
+            if(! SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) return TemplateBooleanModel.FALSE;
+
+            final User user = ((UserDetailService.UserDetailsWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+
+            Course course = (Course) DeepUnwrap.permissiveUnwrap((TemplateModel) params.get(0));
+
+            return course.getAuthorities().contains(user) ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
         });
     }
 

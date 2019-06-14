@@ -16,4 +16,6 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query("SELECT role FROM Role role WHERE role.type = 'group'")
     List<Role> findAllGroupRoles();
+
+    List<Role> findAllByNameIsLike(String name);
 }

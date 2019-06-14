@@ -9,66 +9,48 @@
 </head>
 
 <body>
-
 <#include "../includes/nav-bar.ftl" />
 
-<main role="main" class="container white">
-    <div class="row">
-        <div class="col-sm-8">
-            <h2>${course.name}</h2>
-
-        <#list course.nodes as node>
-            <div class="row">
-                <a href="<@spring.url '/node/${node.id}' />">${node.title}</a>
+<main role="main">
+    <div class="container white">
+        <div class="row">
+            <div class="col-sm-9">
+                <h2>${course.name}</h2>
+                <div>
+                ${course.description}
+                </div>
             </div>
-        </#list>
-        </div>
-        <div class="col-sm-4">
-            <h4>Autoridades del curso
+            <div class="col-sm-3">
+                <strong>Autoridades</strong>
             <#if hasAuthority('admin')>
-                <button class="btn btn-info" data-toggle="modal"
-                        data-target="#add-authority-modal"><i class="fa fa-plus"></i> Agregar
-                </button>
+                <span class="badge badge-info" data-toggle="modal"
+                      data-target="#add-authority-modal" style="cursor:pointer"><i class="fa fa-plus"></i> Agregar
+                    </span>
             </#if>
-            </h4>
-        <#list course.authorities as authority>
-            <div>${authority.username}</div>
-        </#list>
+            <#list course.authorities as authority>
+                <div><i class="fas fa-chalkboard-teacher"></i> ${authority.username}</div>
+            </#list>
+            </div>
         </div>
     </div>
+    <div class="container white">
+    <#if !course.nodes?has_content>
+        El curso aun no tiene contenido
+    </#if>
+    <#list course.nodes as node>
+        <div class="row">
+            <a href="<@spring.url '/node/${node.id}' />"><i class="far fa-file-alt"></i> ${node.title}</a>
+        </div>
+    </#list>
+    </div>
+</main>
 
 <#if hasAuthority('admin')>
-    <div id="add-authority-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-         aria-labelledby="addAuthModalLabel">
-
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form method="post" action="<@spring.url '/course/${course.id}/authority/add' />">
-                    <div class="modal-header">
-                        <h5 id="addAuthModalLabel">Agregar autoridad</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Ingrese una autoridad del curso</label>
-
-                            <input class="form-control" name="user">
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden"
-                                   name="${_csrf.parameterName}"
-                                   value="${_csrf.token}"/>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button class="btn btn-primary" type="submit">Enviar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <@modal modalId='add-authority-modal' form=true formAction='/course/${course.id}/authority/add'
+    footerCancel='Cerrar' footerAccept='Enviar' header='Agregar Autoridad'
+    content='<div class="form-group"><label>Ingrese una autoridad del curso</label>
+             <input class="form-control" name="user"></div>'></@modal>
 </#if>
-</main>
 
 </body>
 </html>

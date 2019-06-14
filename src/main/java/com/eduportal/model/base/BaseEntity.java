@@ -1,9 +1,6 @@
 package com.eduportal.model.base;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.util.Date;
 
 
@@ -38,5 +35,16 @@ public abstract class BaseEntity {
 
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.creationDate = new Date();
+        this.modificationDate = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.modificationDate = new Date();
     }
 }

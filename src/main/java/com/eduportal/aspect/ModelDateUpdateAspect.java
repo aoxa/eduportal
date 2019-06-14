@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Aspect
-@Component
+//@Aspect
+//s@Component
 public class ModelDateUpdateAspect {
 
     public void updateTime(JoinPoint joinPoint) {

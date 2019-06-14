@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
-@Component
 @Interceptor
 public class RoleUpdateInterceptor  extends HandlerInterceptorAdapter {
     private final Set<User> users = Collections.synchronizedSet(new HashSet<>());

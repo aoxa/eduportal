@@ -9,11 +9,14 @@ import com.eduportal.repository.NodeRepository;
 import com.eduportal.service.node.NodeTypeService;
 import com.eduportal.web.view.form.AddCourseForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +27,12 @@ import java.util.Set;
 public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private SecurityService securityService;
+
+    @Autowired
+    private NodeTypeService nodeTypeService;
 
     @GetMapping("/add")
     public String displayAdd(Model model) {
@@ -46,13 +55,6 @@ public class CourseController {
         return "redirect:/course/"+c.getId();
     }
 
-
-    @Autowired
-    private SecurityService securityService;
-
-    @Autowired
-    private NodeTypeService nodeTypeService;
-
     @GetMapping("{course}")
     public String viewCourse(Model model, @PathVariable Course course) {
         //TODO validate user has role to be here
@@ -71,6 +73,16 @@ public class CourseController {
         Set<User> authorities = course.getAuthorities();
         authorities = null == authorities?new HashSet<>() : authorities;
         authorities.add(user);
+
+        courseRepository.save(course);
+
+        return "redirect:/course/"+course.getId();
+    }
+
+    @PostMapping("/{course}/enroll")
+    public String enroll(@PathVariable Course course, HttpServletResponse response) {
+        final User user = securityService.findLoggedInUser();
+        course.getEnrolled().add(user);
 
         courseRepository.save(course);
 
