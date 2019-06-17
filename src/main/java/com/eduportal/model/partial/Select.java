@@ -7,11 +7,11 @@ import java.util.Set;
 
 @Entity
 public class Select extends Element {
-    @Column(columnDefinition = "BIT(1)")
+    @Column(columnDefinition = "TINYINT", length = 1)
     private Boolean checkBox = Boolean.FALSE;
-    @Column(columnDefinition = "BIT(1)")
+    @Column(columnDefinition = "TINYINT", length = 1)
     private Boolean radioButton = Boolean.FALSE;
-    @Column(columnDefinition = "BIT(1)")
+    @Column(columnDefinition = "TINYINT", length = 1)
     private Boolean multivalued = Boolean.FALSE;
 
     @OneToMany(cascade = CascadeType.ALL)
