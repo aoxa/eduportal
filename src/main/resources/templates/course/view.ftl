@@ -49,8 +49,27 @@
     <@modal modalId='add-authority-modal' form=true formAction='/course/${course.id}/authority/add'
     footerCancel='Cerrar' footerAccept='Enviar' header='Agregar Autoridad'
     content='<div class="form-group"><label>Ingrese una autoridad del curso</label>
-             <input class="form-control" name="user"></div>'></@modal>
+             <input type="hidden" name="user"></div>'></@modal>
 </#if>
+
+<script>
+    $("#add-authority-modal input[name='user']").select2({
+        ajax:{
+            url: "<@spring.url "/teacher/list.json"/>",
+            data: function (term, page) {
+                return {
+                    q: term
+                };
+            },            dataType: "json",
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        width: "100%",
+        minimumInputLength: 2,
+        theme: "classic"
+    })
+</script>
 
 </body>
 </html>

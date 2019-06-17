@@ -49,6 +49,14 @@ public class QueryController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/teacher/list.json")
+    public @ResponseBody
+    List<Object> getTeacherList(String q) {
+        return groupRepository.findByName("teacher").getUsers().stream()
+                .filter(e->e.getUsername() != null).map(e -> new Entry<>(e.getUsername(), e.getId()))
+                .collect(Collectors.toList());
+    }
+
     public static class Entry<T> {
         String text;
         T id;

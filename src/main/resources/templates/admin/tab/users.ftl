@@ -1,36 +1,13 @@
 <h5 class="border-bottom">Invitar usuario</h5>
 <div class="section-content">
-    <button class="btn btn-info"  data-toggle="modal"
-            data-target="#invite-user-modal"><i class="fa fa-user-plus"></i> Invitar Usuario</button>
+    <button class="btn btn-info" data-toggle="modal"
+            data-target="#invite-user-modal"><i class="fa fa-user-plus"></i> Invitar Usuario
+    </button>
 </div>
 
 <h5 class="border-bottom">Editar usuario</h5>
-<div class="section-content">
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Username</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list users as user>
-        <tr>
-            <th scope="row">${user.id}</th>
-            <td>${user.username!"not set yet"}</td>
-            <td>
-                <i class="far fa-edit" style="cursor:pointer" data-whatever="${user.id}" data-toggle="modal"
-                   data-target="#user-info-modal"></i>
-                <#if !(user.active??) || !user.active>
-                    <i class="fa fa-ban" aria-hidden="true"></i>
-                </#if>
-            </td>
-        </tr>
-        </#list>
-
-        </tbody>
-    </table>
+<div class="section-content" id="user-listing">
+<#include "partial/user-list.ftl" />
 </div>
 <h5 class="border-bottom">Asignar grupo</h5>
 <div class="section-content">
@@ -45,64 +22,26 @@
     <button id="map-user" class="btn btn-success">Agregar</button>
 </div>
 
-<div id="invite-user-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-     aria-labelledby="inviteUserModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="userInfoModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>E-mail del usuario</label>
-                    <input class="form-control" id="user-email">
-                </div>
-                <div class="form-group">
-                    <label>Grupos del usuario</label>
-                    <input type="hidden" id="user-group" multiple>
-                </div>
-                <div class="form-group">
-                    <label>Roles del usuario</label>
-                    <input type="hidden" id="user-roles">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button class="btn btn-primary" type="button">Enviar</button>
-            </div>
-        </div>
-    </div>
-</div>
+<@modal modalId='user-remove-modal' header='' content='Desea eliminar el usuario?' footerAccept='Eliminar'
+footerCancel='Cerrar' ></@modal>
 
-<div id="user-info-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-     aria-labelledby="userInfoModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="userInfoModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h6>Grupos del usuario</h6>
-                <div id="group-info" class="row">
-                </div>
-                <h6>Roles del usuario</h6>
-                <div id="role-info" class="row">
-                </div>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
-</div>
+<@modal modalId="invite-user-modal" header=""
+content='<div class="form-group"><label>E-mail del usuario</label>
+                    <input class="form-control" id="user-email"></div>
+                <div class="form-group"><label>Grupos del usuario</label>
+                    <input type="hidden" id="user-group" multiple></div>
+                <div class="form-group"><label>Roles del usuario</label>
+                    <input type="hidden" id="user-roles"></div>'
+footerAccept="Invitar" footerCancel="Cerrar"
+></@modal>
+
+<@modal modalId="user-info-modal" header=''
+content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
+                <h6>Roles del usuario</h6><div id="role-info" class="row"></div>'
+></@modal>
 
 <script>
-    $("#invite-user-modal .btn-primary").click(function(){
+    $("#invite-user-modal .btn-primary").click(function () {
 
         var content = {};
         content.email = $("#user-email").val();
@@ -120,7 +59,8 @@
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            success: function(data, textStatus, request) {
+            success: function (data, textStatus, request) {
+                $("#invite-user-modal").modal('toggle')
             }
         });
     });
@@ -131,13 +71,42 @@
         $.get("<@spring.url "/admin/users/map" />?user=" + user + "&group=" + group);
     });
 
+    $("#user-remove-modal .btn-primary").click(function () {
+        var userId = $("#user-remove-modal .btn-primary").attr("to-remove");
+        $.ajax({
+            type: "DELETE",
+            url: "<@spring.url '/admin/users' />/" + userId,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('${_csrf.headerName}', "${_csrf.token}");
+            },
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (data, textStatus, request) {
+                $("#user-listing").html(data);
+                $("#user-remove-modal").modal('toggle')
+            }
+        });
+    });
+
+    $('#user-remove-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var userId = button.data('userid');
+        var username = button.data('username');
+        $("#user-remove-modal .btn-primary").attr("to-remove", userId);
+        $("#user-remove-modal .modal-title").text("Eliminar usuario " + username);
+    });
+
     $('#user-info-modal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
-        var userId = button.data('whatever') // Extract info from data-* attributes
+        var userId = button.data('userid') // Extract info from data-* attributes
+        var username = button.data('username') // Extract info from data-* attributes
 
         var $modal = $(this);
         $modal.find("#role-info").empty();
         $modal.find("#group-info").empty();
+        $modal.find(".modal-title").text("Informacion de " + username);
 
         $.get("<@spring.url "/api/users/" />" + userId + ".json", function (data) {
             $modal.find("#userInfoModalLabel").text(data.username);
@@ -170,15 +139,15 @@
     });
 
     $("#user-complete").select2({
-        ajax:{
+        ajax: {
             url: "<@spring.url "/admin/user/list.json"/>",
             data: function (term, page) {
                 return {
                     q: term
                 };
-            },            dataType: "json",
+            }, dataType: "json",
             results: function (data, page) {
-                return { results: data };
+                return {results: data};
             }
         },
         width: "100%",
@@ -187,15 +156,15 @@
     });
 
     $("#user-roles").select2({
-        ajax:{
+        ajax: {
             url: "<@spring.url "/admin/role/list.json"/>",
             data: function (term, page) { // page is the one-based page number tracked by Select2
                 return {
                     q: term
                 };
-            },            dataType: "json",
+            }, dataType: "json",
             results: function (data, page) {
-                return { results: data };
+                return {results: data};
             }
         },
         width: "100%",
@@ -205,7 +174,7 @@
     });
 
     $("#user-group").select2({
-        ajax:{
+        ajax: {
             url: "<@spring.url "/admin/group/list.json"/>",
             dataType: "json",
             data: function (term, page) {
@@ -214,7 +183,7 @@
                 };
             },
             results: function (data, page) {
-                return { results: data };
+                return {results: data};
             }
         },
         width: "100%",
@@ -224,7 +193,7 @@
     });
 
     $("#group-complete").select2({
-        ajax:{
+        ajax: {
             url: "<@spring.url "/admin/group/list.json"/>",
             dataType: "json",
             data: function (term, page) {
@@ -233,7 +202,7 @@
                 };
             },
             results: function (data, page) {
-                return { results: data };
+                return {results: data};
             }
         },
         width: "100%",

@@ -122,6 +122,15 @@ public class DashboardController {
         return "admin/tab/partial/group-list";
     }
 
+    @DeleteMapping("/users/{user}")
+    public String removeUser(Model model, @PathVariable User user) {
+        userRepository.delete(user);
+
+        model.addAttribute("users", userRepository.findAll());
+
+        return "admin/tab/partial/user-list";
+    }
+
     @GetMapping("/users/map")
     public @ResponseBody
     ResponseEntity<String> mapUsers(@RequestParam User user, @RequestParam Group group) {

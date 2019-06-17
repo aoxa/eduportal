@@ -1,12 +1,12 @@
 <#if ! groups?has_content>
-No hay groupos cargados
+No hay grupos cargados
 <#else>
 <table class="table table-hover">
     <thead>
     <tr>
         <th scope="col">#</th>
-        <th scope="col">Group Name</th>
-        <th scope="col">Actions</th>
+        <th scope="col">Nombre de Grupo</th>
+        <th scope="col">Acciones</th>
     </tr>
     </thead>
     <tbody>

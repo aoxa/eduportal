@@ -13,7 +13,7 @@
 <div>
     <div class="form-group">
     <#if ! roles?has_content>
-        No hay groupos cargados
+        No hay roles cargados
     <#else>
         <table class="table table-hover">
             <thead>
@@ -36,58 +36,37 @@
 </div>
 
 <!-- modals -->
-<div id="group-remove-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-     aria-labelledby="groupModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="groupModalLabel">Eliminar grupo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                El grupo sera eliminado. Esta seguro?
-            </div>
+<@modal modalId="group-remove-modal" header="Eliminar grupo" content='El grupo sera eliminado. Esta seguro?'
+footerCancel="No" footerAccept="Si"
+></@modal>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button id="remove-group" class="btn btn-primary" type="button">Si</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="group-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-     aria-labelledby="groupModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-
-                <h5 class="modal-title" id="groupModalLabel">Agregue un grupo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <label>Elija un nombre</label>
-                <input class="form-control" name="name" type="text">
-                <label>Agregue los roles del grupo</label>
-                <input class="form-control" id="name" class="awesomplete"/>
+<@modal modalId="group-modal" header="Agregar un grupo"
+    content='<label>Nombre</label><input class="form-control" name="name" type="text">
+             <label>Roles del grupo</label><input type="hidden" id="addGroupRoles" class="awesomplete"/>
                 <div id="roles" class="row">
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="add-group" class="btn btn-primary" type="button">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
+                </div>' footerCancel="Cerrar" footerAccept="Crear"/>
 
 <script>
+
     var input = document.getElementById("name");
+
+    $("#addGroupRoles").select2({
+        ajax: {
+            url: "<@spring.url "/admin/role/list.json"/>",
+            data: function (term, page) { // page is the one-based page number tracked by Select2
+                return {
+                    q: term
+                };
+            }, dataType: "json",
+            results: function (data, page) {
+                return {results: data};
+            }
+        },
+        width: "100%",
+        multiple: true,
+        minimumInputLength: 2,
+        theme: "classic"
+    });
 
     new Awesomplete(input, {
         list: [

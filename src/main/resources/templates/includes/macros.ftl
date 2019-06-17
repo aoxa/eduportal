@@ -1,4 +1,4 @@
-<#macro modal modalId header content footerAccept footerCancel='' form=false formAction=''>
+<#macro modal modalId header content footerAccept='' footerCancel='' form=false formAction=''>
 <div id="${modalId}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
      aria-labelledby="${modalId}Label">
     <div class="modal-dialog" role="document">
@@ -20,8 +20,9 @@
                 <#if footerCancel?has_content>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">${footerCancel}</button>
                 </#if>
-
-                <button class="btn btn-primary" type="submit">${footerAccept}</button>
+                <#if footerAccept?has_content>
+                    <button class="btn btn-primary" type="submit">${footerAccept}</button>
+                </#if>
             </div>
             <#if form>
                 <input type="hidden"

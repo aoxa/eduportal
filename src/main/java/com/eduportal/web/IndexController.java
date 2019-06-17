@@ -1,5 +1,6 @@
 package com.eduportal.web;
 
+import com.eduportal.auth.model.Role;
 import com.eduportal.auth.model.User;
 import com.eduportal.auth.repository.RoleRepository;
 import com.eduportal.auth.repository.UserRepository;
@@ -17,10 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class IndexController {
@@ -35,10 +33,12 @@ public class IndexController {
     public String welcome(Model model) {
         User user = securityService.findLoggedInUser();
 
-        Optional<List<Course>> userCourses = courseRepository.findAllForUserRoles(user.getAllRoles());
+        Set<Role> roles = user.getAllRoles();
+        if(!roles.isEmpty()) {
+            Optional<List<Course>> userCourses = courseRepository.findAllForUserRoles(roles);
 
-        model.addAttribute("courses", userCourses.orElse(Collections.emptyList()));
-
+            model.addAttribute("courses", userCourses.orElse(Collections.emptyList()));
+        }
         return "welcome";
     }
 }
