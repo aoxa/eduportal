@@ -19,8 +19,7 @@ public class Node<T extends NodeReply> extends BaseEntity {
 
     private String title;
 
-    @Lob
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     private String description;
