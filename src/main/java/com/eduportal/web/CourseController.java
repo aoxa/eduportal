@@ -34,6 +34,9 @@ public class CourseController {
     @Autowired
     private NodeTypeService nodeTypeService;
 
+    @Autowired
+    private NodeRepository nodeRepository;
+
     @GetMapping("/add")
     public String displayAdd(Model model) {
         return "new-course";
@@ -61,6 +64,7 @@ public class CourseController {
         User user = securityService.findLoggedInUser();
         model.addAttribute("isAuthority", course.getAuthorities().contains(user));
         model.addAttribute("course", course);
+        model.addAttribute("nodes", nodeRepository.findAllByCourse(course));
         model.addAttribute("nodeTypes", nodeTypeService.getNodeTypes());
 
         return "course/view";

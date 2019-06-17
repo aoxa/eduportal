@@ -34,10 +34,10 @@
         </div>
     </div>
     <div class="container white">
-    <#if !course.nodes?has_content>
+    <#if !nodes?has_content>
         El curso aun no tiene contenido
     </#if>
-    <#list course.nodes as node>
+    <#list nodes as node>
         <div class="row">
             <div class="col-sm-1"><@nodeIcon node /></div>
             <div class="col-sm-11">
