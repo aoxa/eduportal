@@ -4,9 +4,9 @@
     <#include "partial/group-list.ftl" />
     </div>
     <button data-original-title="Agregar nuevo elemento" data-placement="top" type="button"
-            class="btn btn-primary" id="add-group-button"
+            class="btn btn-info" id="add-group-button"
             data-toggle="modal" data-target="#group-modal">
-        Agregar nuevo
+        <i class="fas fa-users"></i> Agregar grupo
     </button>
 </div>
 <h5 class="border-bottom">Roles</h5>
@@ -41,7 +41,7 @@ footerCancel="No" footerAccept="Si"
 ></@modal>
 
 <@modal modalId="group-modal" header="Agregar un grupo"
-    content='<label>Nombre</label><input class="form-control" name="name" type="text">
+content='<label>Nombre</label><input class="form-control" name="name" type="text">
              <label>Roles del grupo</label><input type="hidden" id="addGroupRoles" class="awesomplete"/>
                 <div id="roles" class="row">
                 </div>' footerCancel="Cerrar" footerAccept="Crear"/>

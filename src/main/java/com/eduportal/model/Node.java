@@ -4,12 +4,13 @@ import com.eduportal.model.base.BaseEntity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "nodo")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
-public class Node extends BaseEntity {
+public class Node<T extends NodeReply> extends BaseEntity {
     @Column(updatable = false, insertable = false)
     private String type;
 
@@ -25,6 +26,9 @@ public class Node extends BaseEntity {
     private String description;
 
     private Date limitDate;
+
+    @OneToMany(mappedBy = "parent", targetEntity = NodeReply.class)
+    private Set<T> children;
 
     public Course getCourse() {
         return course;
@@ -72,5 +76,13 @@ public class Node extends BaseEntity {
 
     public void setLimitDate(Date limitDate) {
         this.limitDate = limitDate;
+    }
+
+    public Set<T> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<T> children) {
+        this.children = children;
     }
 }

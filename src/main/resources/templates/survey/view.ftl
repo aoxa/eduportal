@@ -108,7 +108,7 @@
             </tr>
             </thead>
             <tbody>
-                <#list node.replies as reply>
+                <#list node.children as reply>
                 <tr>
                     <th scope="row">${reply.user.username}</th>
                     <td>${reply.score} / 100</td>

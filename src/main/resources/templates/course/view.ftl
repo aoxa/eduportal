@@ -39,7 +39,10 @@
     </#if>
     <#list course.nodes as node>
         <div class="row">
-            <a href="<@spring.url '/node/${node.id}' />"><i class="far fa-file-alt"></i> ${node.title}</a>
+            <div class="col-sm-1"><@nodeIcon node /></div>
+            <div class="col-sm-11">
+                <a href="<@spring.url '/node/${node.id}' />">${node.title}</a>
+            </div>
         </div>
     </#list>
     </div>

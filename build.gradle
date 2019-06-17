@@ -19,6 +19,9 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
 // enableFeaturePreview('IMPROVED_POM_SUPPORT')
 
 repositories {

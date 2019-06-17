@@ -34,3 +34,16 @@
     </div>
 </div>
 </#macro>
+
+<#macro nodeIcon node>
+    <#switch node.type>
+    <#case "article">
+    <i class="far fa-newspaper"></i>
+    <#break >
+    <#case "survey">
+    <i class="fas fa-question"></i>
+    <#break>
+    <#default>
+    <i class="fas fa-question"></i>
+    </#switch>
+</#macro>

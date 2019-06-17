@@ -100,9 +100,7 @@
         </#list>
     </#if>
     </div>
-    <input type="hidden"
-           name="${_csrf.parameterName}"
-           value="${_csrf.token}"/>
+
     <button id="publish" type="button" class="btn btn-primary">Publicar asignatura</button>
 </main>
 <!-- Button trigger modal -->
@@ -176,7 +174,7 @@
             minDate: new Date()
         });
 
-            $('#editor').froalaEditor({width: '100%', placeholderText: 'Ingrese una descripcion para la asignatura'});
+        $('#editor').froalaEditor({width: '100%', placeholderText: 'Ingrese una descripcion para la asignatura'});
 
         $('#fab-add').tooltip();
 

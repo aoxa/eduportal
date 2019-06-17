@@ -10,9 +10,6 @@ import java.util.*;
 public class Survey extends Node {
     public final static String TYPE = "survey";
 
-    @OneToMany(mappedBy = "parent")
-    private Set<SurveyReply> replies;
-
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Element> elements = new HashSet<>();
 
@@ -30,13 +27,5 @@ public class Survey extends Node {
 
     public void setElements(Set<Element> elements) {
         this.elements = elements;
-    }
-
-    public Set<SurveyReply> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(Set<SurveyReply> replies) {
-        this.replies = replies;
     }
 }
