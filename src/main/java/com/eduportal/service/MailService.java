@@ -23,7 +23,7 @@ public class MailService {
     @Autowired
     private SettingsRepository settingsRepository;
 
-    public void sendInvitation(User user) {
+    public void sendInvitation(String host, User user) {
 
         Session session = buildSession();
 
@@ -46,7 +46,7 @@ public class MailService {
             }
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("from@gmail.com"));
+            message.setFrom(new InternetAddress("no_reply@eduportal.com"));
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(user.getEmail())
@@ -54,7 +54,7 @@ public class MailService {
 
             message.setSubject("Invitacion a participar");
             message.setText("Usted fue invitado a participar,"
-                    + "\n\n por favor siga el <a href='http://localhost:8080/registration?message=" + jsonString + "'>link</a> para registrarse");
+                    + "\n\n por favor siga el <a href='"+host+"/registration?message=" + jsonString + "'>link</a> para registrarse");
 
             Transport.send(message);
 

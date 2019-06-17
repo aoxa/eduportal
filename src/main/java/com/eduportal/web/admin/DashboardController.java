@@ -12,6 +12,7 @@ import com.eduportal.service.MailService;
 import com.eduportal.web.admin.form.GroupAddForm;
 import com.eduportal.web.admin.form.InviteUserForm;
 import com.eduportal.web.admin.form.MailConfigForm;
+import com.eduportal.web.helper.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -94,7 +96,7 @@ public class DashboardController {
     }
 
     @PostMapping("/users/invite")
-    public @ResponseBody Object invite(Model model, @RequestBody InviteUserForm inviteUserForm) {
+    public @ResponseBody Object invite(Model model, @RequestBody InviteUserForm inviteUserForm, HttpServletRequest request) {
         User user = new User();
         user.setEmail(inviteUserForm.getEmail());
 
@@ -110,7 +112,7 @@ public class DashboardController {
 
         userRepository.save(user);
 
-        mailService.sendInvitation(user);
+        mailService.sendInvitation(RequestHelper.createURL(request, null), user);
 
         return userRepository.findAll();
     }

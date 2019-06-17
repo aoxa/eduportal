@@ -3,6 +3,7 @@ package com.eduportal.web.helper;
 import javax.servlet.http.HttpServletRequest;
 
 public class RequestHelper {
+
     public static String createURL(HttpServletRequest request, String resourcePath) {
 
         int port = request.getServerPort();
