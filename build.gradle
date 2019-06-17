@@ -29,7 +29,7 @@ repositories {
 }
 
 bootJar {
-    mainClassName = 'com.eduportal.auth.WebApplication'
+    mainClassName = 'com.eduportal.WebApplication'
 }
 
 bootRun {
