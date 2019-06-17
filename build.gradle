@@ -54,10 +54,13 @@ dependencies {
 
     compile group: 'javax.servlet', name: 'jstl', version:'1.2'
     compile group: 'com.sun.mail', name: 'javax.mail'
+    compile group: 'org.freemarker', name:'freemarker'
+
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    compile group: 'org.postgresql', name: 'postgresql'
 
     // Use MySQL Connector-J
-    compile group: 'mysql', name:'mysql-connector-java'
-    compile group: 'org.freemarker', name:'freemarker'
+    //compile group: 'mysql', name:'mysql-connector-java'
 
     //runtime group: 'org.hsqldb', name: 'hsqldb', version:'2.4.1'
 
