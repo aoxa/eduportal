@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 public class Option extends Element {
     private String value;
 
-    @Column(name = "selected", columnDefinition = "TINYINT", length = 1)
+    @Column(name = "selected", columnDefinition = "BOOLEAN")
     private Boolean selected;
 
     public String getValue() {
