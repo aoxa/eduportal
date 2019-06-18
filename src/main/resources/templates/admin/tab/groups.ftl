@@ -34,7 +34,7 @@
     </#if>
     </div>
 </div>
-
+DEPLOY
 <!-- modals -->
 <@modal modalId="group-remove-modal" header="Eliminar grupo" content='El grupo sera eliminado. Esta seguro?'
 footerCancel="No" footerAccept="Si"
@@ -47,8 +47,6 @@ content='<label>Nombre</label><input class="form-control" name="name" type="text
                 </div>' footerCancel="Cerrar" footerAccept="Crear"/>
 
 <script>
-
-
     $("#addGroupRoles").select2({
         ajax: {
             url: "<@spring.url "/admin/role/list.json"/>",
