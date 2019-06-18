@@ -42,13 +42,12 @@ footerCancel="No" footerAccept="Si"
 
 <@modal modalId="group-modal" header="Agregar un grupo"
 content='<label>Nombre</label><input class="form-control" name="name" type="text">
-             <label>Roles del grupo</label><input type="hidden" id="addGroupRoles" class="awesomplete"/>
+             <label>Roles del grupo</label><input type="hidden" id="addGroupRoles" />
                 <div id="roles" class="row">
                 </div>' footerCancel="Cerrar" footerAccept="Crear"/>
 
 <script>
 
-    var input = document.getElementById("name");
 
     $("#addGroupRoles").select2({
         ajax: {
@@ -66,34 +65,6 @@ content='<label>Nombre</label><input class="form-control" name="name" type="text
         multiple: true,
         minimumInputLength: 2,
         theme: "classic"
-    });
-
-    new Awesomplete(input, {
-        list: [
-        <#list roles as role>
-            {label: "${role.name}", value: "${role.id}"}<#if !role?is_last>,</#if>
-        </#list>]
-    });
-
-    $("#name").on('awesomplete-selectcomplete', function (e) {
-        var item = e.originalEvent.text;
-
-        var element = $("<div>");
-        $(element).addClass("col-sm-3");
-        $(element).attr("role-id", item.value);
-        $(element).text(item.label);
-        var icon = $("<i>").addClass("far").addClass("fa-window-close").addClass("float-right");
-        $(icon).attr("style", "margin-top: 5px;");
-        $(element).append(icon);
-
-
-        $(".modal-body #roles").append(element);
-
-        $(".far.fa-window-close").click(function () {
-            $(this).parent().detach();
-        });
-
-        $("#name").val("");
     });
 
     $('#group-remove-modal').on('show.bs.modal', function (event) {
@@ -115,16 +86,16 @@ content='<label>Nombre</label><input class="form-control" name="name" type="text
         $("#group-remove-modal").modal('toggle');
     });
 
-    $("#add-group").click(function () {
+    $("#group-modal .btn-primary").click(function () {
+        var $button = $(this);
         var content = {};
         content.name = $("input[name='name']").val();
-        content.roles = [];
-        $("#roles div").each(function (i, e) {
-            content.roles.push($(e).attr("role-id"));
-        });
-
-        $("#roles div").detach();
+        content.roles = $("#addGroupRoles").val().split(",");
+        $("#addGroupRoles").val("");
         $("input[name='name']").val("");
+        $("#addGroupRoles").select2("val", "");
+
+        $button.attr("disabled", "disabled");
 
         $.ajax({
             type: "POST",
@@ -140,6 +111,7 @@ content='<label>Nombre</label><input class="form-control" name="name" type="text
             success: function (data) {
                 $("#group-modal").modal('toggle');
                 $("#group-list-content").html(data);
+                $button.removeAttr("disabled");
             }
         });
 
