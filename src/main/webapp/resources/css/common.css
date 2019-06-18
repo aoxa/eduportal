@@ -109,3 +109,12 @@ body {
 .element i.fa-arrows-alt-v {
     margin-top: 14px;
 }
+
+.comment-header {
+    font-size: smaller;
+    color: gray;
+}
+
+.comment-header span.user {
+    font-weight: 600;
+}

@@ -38,7 +38,7 @@
                 Breve descripcion del articulo
             </div>
             <div class="col-sm-8">
-                <input name="description" id="description" type="text" value="<#if node??>${node.description}</#if>" />
+                <input name="description" class="form-control" id="description" type="text" value="<#if node??>${node.description}</#if>" />
             </div>
         </div>
 

@@ -59,7 +59,7 @@ public class SurveyController {
         return node.getType().toLowerCase() + "/view";
     }
 
-    @PutMapping("/{course}/survey/{node}")
+    @PostMapping("/{course}/survey/{node}/reply")
     public String reply(Model model, @PathVariable("course") Course course,
                         @PathVariable("node") Node node, @RequestBody SurveyReply surveyReply) {
         model.addAttribute("node", node);

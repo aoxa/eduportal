@@ -31,6 +31,14 @@ public class SecurityMacroInterceptor extends AbstractMacroInterceptor {
 
     @PostConstruct
     public void startUp() {
+        macros.put("currentUser", (params) -> {
+            if(null !=SecurityContextHolder.getContext().getAuthentication()) {
+                UserDetailService.UserDetailsWrapper wrapper = (UserDetailService.UserDetailsWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                return wrapper.getUser();
+            }
+            return null;
+        });
+
         macros.put("hasAuthority", (params) -> {
             String expectedRole = (String) DeepUnwrap.permissiveUnwrap((TemplateModel) params.get(0));
 

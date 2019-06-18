@@ -34,7 +34,7 @@
     </#if>
     </div>
 </div>
-DEPLOY
+
 <!-- modals -->
 <@modal modalId="group-remove-modal" header="Eliminar grupo" content='El grupo sera eliminado. Esta seguro?'
 footerCancel="No" footerAccept="Si"

@@ -2,6 +2,8 @@
 <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet"
       integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 <link href="https://select2.github.io/select2/select2-3.5.3/select2.css" rel="stylesheet"/>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 <#if admin??>
 <link href="<@spring.url '/resources/css/admin.css' />" rel="stylesheet">
 <link href="<@spring.url '/resources/css/dashboard.css' />" rel="stylesheet">

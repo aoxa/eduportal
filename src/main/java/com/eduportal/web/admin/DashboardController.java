@@ -99,6 +99,7 @@ public class DashboardController {
     public @ResponseBody Object invite(Model model, @RequestBody InviteUserForm inviteUserForm, HttpServletRequest request) {
         User user = new User();
         user.setEmail(inviteUserForm.getEmail());
+        user.setUsername(inviteUserForm.getEmail());
 
         inviteUserForm.getGroups().stream().map(role->Long.parseLong(role))
                 .map(groupId->groupRepository.findById(groupId))

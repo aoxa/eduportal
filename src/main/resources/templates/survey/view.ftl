@@ -78,8 +78,8 @@
             });
 
             $.ajax({
-                type: "PUT",
-                url: "<@spring.url '/${node.course.id}/${nodeDescriptor(node).type}/${node.id}' />",
+                type: "POST",
+                url: "<@spring.url '/${node.course.id}/${nodeDescriptor(node).type}/${node.id}/reply' />",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('${_csrf.headerName}', "${_csrf.token}");
                 },

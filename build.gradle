@@ -7,10 +7,13 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
 }
 
-group = 'org.springframework.boot'
+group = 'com.eduportal'
 version = '2.1.1.RELEASE'
 
 description = """auth"""
+
+
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -21,8 +24,6 @@ tasks.withType(JavaCompile) {
 
 task stage(dependsOn: ['build', 'clean'])
 build.mustRunAfter clean
-
-// enableFeaturePreview('IMPROVED_POM_SUPPORT')
 
 repositories {
      maven { url "http://repo.maven.apache.org/maven2" }

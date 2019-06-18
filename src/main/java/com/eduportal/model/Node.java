@@ -4,6 +4,7 @@ import com.eduportal.model.base.BaseEntity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,8 +27,8 @@ public class Node<T extends NodeReply> extends BaseEntity {
 
     private Date limitDate;
 
-    @OneToMany(mappedBy = "parent", targetEntity = NodeReply.class)
-    private Set<T> children;
+    @OneToMany(mappedBy = "parent", targetEntity = NodeReply.class, cascade = {CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE})
+    private Set<T> children = new HashSet<>();
 
     public Course getCourse() {
         return course;

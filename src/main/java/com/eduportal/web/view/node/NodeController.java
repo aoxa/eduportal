@@ -1,5 +1,6 @@
 package com.eduportal.web.view.node;
 
+import com.eduportal.annotation.ViewEvent;
 import com.eduportal.model.Article;
 import com.eduportal.model.Course;
 import com.eduportal.model.Node;
@@ -52,6 +53,7 @@ public class NodeController {
         return "redirect:/node/" + article.getId();
     }
 
+    @ViewEvent
     @GetMapping("/node/{node}")
     public String view(Model model, @PathVariable("node") Node node) {
         model.addAttribute("node", node);
