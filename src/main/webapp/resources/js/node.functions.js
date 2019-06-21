@@ -11,6 +11,81 @@ var createSurveyContent = function() {
 
     return content;
 }
+
+buildOptions = function(elementType, multiple, content, name) {
+    if(name === undefined) {
+        name = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 9) + '-';
+    }
+    var options = [];
+
+    switch (elementType) {
+        case "select":
+            var el = $("<select class=\"form-control\">");
+            if (multiple) {
+                $(el).attr('multiple', 'multiple');
+            }
+
+            el.attr("name", name);
+
+            content.split(";").forEach(function (e, i) {
+                var option = $("<option>");
+                $(option).val(e.trim());
+                $(option).text(e.trim());
+                $(el).append(option);
+            });
+
+            options.push(el);
+            break;
+        case "checkbox":
+            content.split(";").forEach(function (e, i) {
+                var container = $("<div class=\"form-check\">");
+
+                var label = $("<label class=\"form-check-label\">");
+                var option = $("<input class=\"form-check-input\" type=\"checkbox\" >");
+                var id = "cb-" + name + i;
+
+                $(label).text(e);
+                $(label).attr("for", id);
+                $(option).attr("id", id);
+                $(option).attr("name", name);
+                $(option).val(e.trim());
+
+                $(container).append(option);
+                $(container).append(label);
+
+                options.push(container);
+            });
+
+            break;
+        case "radio":
+            content.split(";").forEach(function (e, i) {
+                var container = $("<div class=\"form-check\">");
+
+                var label = $("<label class=\"form-check-label radio\">");
+                $(label).text(e);
+                var option = $("<input class=\"form-check-input\" type=\"radio\" >");
+                var id = "rb-" + name + i;
+                $(option).attr("name", name);
+                $(option).attr("id", id);
+                $(label).attr("for", id);
+                $(option).val(e.trim());
+
+                $(container).append(option);
+                $(container).append(label);
+
+                options.push(container);
+            });
+
+            break;
+        case "text":
+        default:
+            var el = $("<input type='text' class=\"form-control\" disabled>");
+            options.push(el);
+    }
+
+    return options;
+};
+
 //noinspection JSAnnotator
 function createElement(e, nombre, includeEmpty=true) {
     if(nombre === undefined) {

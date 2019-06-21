@@ -13,9 +13,8 @@
     <link href="<@spring.url '/resources/css/form.css' />" rel="stylesheet">
 </head>
 <body>
-
+<#assign subNavbar = true />
 <#include "../../includes/nav-bar.ftl"/>
-<#include "../../includes/node.sub-nav-bar.ftl" />
 
 <main class="container">
     <div class="container white row">

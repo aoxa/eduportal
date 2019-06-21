@@ -41,7 +41,12 @@ content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
 ></@modal>
 
 <script>
+    $("#invite-user-modal").on('shown.bs.modal', function () {
+        $(this).find('.btn-primary').removeAttr("disabled");
+    });
+
     $("#invite-user-modal .btn-primary").click(function () {
+        $(this).attr("disabled", "disabled");
 
         var content = {};
         content.email = $("#user-email").val();

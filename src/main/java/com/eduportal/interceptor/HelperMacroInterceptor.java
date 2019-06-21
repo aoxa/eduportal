@@ -5,6 +5,8 @@ import com.eduportal.auth.repository.UserRepository;
 import com.eduportal.auth.service.UserDetailService;
 import com.eduportal.model.Settings;
 import com.eduportal.repository.SettingsRepository;
+import com.eduportal.web.SessionMessage;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateMethodModelEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,8 @@ import java.util.Optional;
 
 @Interceptor
 public class HelperMacroInterceptor  extends AbstractMacroInterceptor {
+    @Autowired
+    private SessionMessage sessionMessage;
 
     @Autowired
     private UserRepository userRepository;
@@ -43,6 +47,18 @@ public class HelperMacroInterceptor  extends AbstractMacroInterceptor {
             Optional<Settings> setting = settingsRepository.findById(params.get(0).toString());
             return setting.isPresent()? setting.get().getValue():null;
         });
+
+        macros.put("hasSessionMessage", (params) -> {
+                    if(sessionMessage.isPendingDisplay()) {
+                        sessionMessage.setPendingDisplay(false);
+                        return TemplateBooleanModel.TRUE;
+                    }
+                    return TemplateBooleanModel.FALSE;
+
+                }
+        );
+
+        macros.put("sessionMessage", (params) ->  sessionMessage.getMessage());
 
     }
 

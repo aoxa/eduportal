@@ -39,3 +39,9 @@
 <form id="logoutForm" method="POST" action="<@spring.url '/logout' />">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>
+
+<#if subNavbar??>
+    <#include "node.sub-nav-bar.ftl" />
+</#if>
+
+<#include "session-message.ftl" />

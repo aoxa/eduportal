@@ -3,6 +3,7 @@ package com.eduportal.auth.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,7 +12,9 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 1113799434508676095L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,8 +41,9 @@ public class UserDetailService implements UserDetailsService {
                 grantedAuthorities);
     }
 
-    public static class UserDetailsWrapper extends org.springframework.security.core.userdetails.User {
+    public static class UserDetailsWrapper extends org.springframework.security.core.userdetails.User implements Serializable {
         private final User user;
+
         public UserDetailsWrapper(User user,
                     Collection<? extends GrantedAuthority> authorities) {
             super(user.getUsername(), user.getPassword(), true, true, true, true, authorities);

@@ -15,7 +15,7 @@ public class Node<T extends NodeReply> extends BaseEntity {
     @Column(updatable = false, insertable = false)
     private String type;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Course course;
 
     private String title;

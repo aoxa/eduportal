@@ -17,9 +17,8 @@
     <script src="<@spring.url '/resources/js/node.functions.js' />"></script>
 </head>
 <body>
-
+<#assign subNavbar = true />
 <#include "../includes/nav-bar.ftl" />
-<#include "../includes/node.sub-nav-bar.ftl" />
 
 <main role="main" class="container">
 
@@ -58,7 +57,7 @@
                             <#list element.options as option>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="${element.name}"
-                                           value="${option.value}">
+                                           value="${option.value}" <#if option.selected>checked</#if>>
                                     <label class="form-check-label">${option.name}</label>
                                 </div>
                             </#list>
@@ -68,7 +67,7 @@
                             <#list element.options as option>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="${element.name}"
-                                           value="${option.value}">
+                                           value="${option.value}" <#if option.selected>checked</#if>>
                                     <label class="form-check-label">${option.name}</label>
                                 </div>
                             </#list>
@@ -93,41 +92,43 @@
                 <div class="col-sm-1">
                     <i data-toggle="tooltip" class="far fa-question-circle element-tip"
                        data-original-title="${element.tip}" data-placement="right"></i>
-                    <a class="edit-element" href="#"><i class="far fa-edit"></i></a>
+                    <i class="far fa-edit" data-element="#element-skeleton-${element.id}"
+                       data-toggle="modal" data-target="#edit-item-modal"></i>
+                    <i class="fa fa-trash" data-element="#element-skeleton-${element.id}"
+                       data-toggle="modal" data-target="#element-remove-modal"></i>
                 </div>
             </div>
         </#list>
     </#if>
     </div>
 
-    <button id="publish" type="button" class="btn btn-primary">Publicar asignatura</button>
+    <button id="publish" type="button" class="btn btn-primary"><#if node??>Actualizar<#else>Publicar</#if> asignatura</button>
 </main>
-<!-- Button trigger modal -->
 
+<!-- Button trigger modal -->
 <button id="fab-add" data-original-title="Agregar nuevo elemento" data-placement="top" type="button"
         class="btn btn-primary bottom-right-floating btn-circle btn-xl"
         data-toggle="modal" data-target="#item-modal">+
 </button>
 
-<!-- Modal -->
-<div class="modal fade" id="item-modal" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregue un elemento</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <label>Tipo de elemento</label>
+<@modal modalId="element-remove-modal" header="Eliminar elemento"
+content="La accion no se puede deshacer, esta seguro?<input type=\"hidden\" id=\"remove-element-id\">"
+footerCancel="Cerrar" footerAccept="Eliminar"
+/>
+
+<@modal modalId="edit-item-modal" header="Editar elemento"
+content="<div id='form-group'><label>Titulo</label><input id='edit-title' class='form-control'>
+             <label>Opciones, separadas por punto y coma</label><input class='form-control' id='edit-options'></div>"
+footerCancel="Cerrar" footerAccept="Actualizar" />
+
+<@modal modalId="item-modal" header="Agregue un elemento"
+content='<label>Tipo de elemento</label>
                 <select id="modal-type" class="form-control">
-                    <option value="cb">Check box</option>
-                    <option value="rb">Radio button</option>
-                    <option value="sel">Select</option>
-                    <option value="msel">Multi Select</option>
-                    <option value="txt">Text</option>
+                    <option value="checkbox">Opcion multiple</option>
+                    <option value="radio">Opcion unica</option>
+                    <option value="select">Opcion unica, desplegable</option>
+                    <option value="mselect">Opcion multiple, desplegable</option>
+                    <option value="text">Texto</option>
                 </select>
                 <label>Pregunta/Titulo del elemento</label>
                 <input id="modal-title" class="form-control" type="text">
@@ -136,15 +137,9 @@
                 <div id="modal-multi">
                     <label>Agregue las opciones, separadas por punto y coma</label>
                     <textarea id="modal-multi-content" class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+                </div>'
+footerAccept="Agregar" footerCancel="Cerrar"/>
+
 <div id="element-skeleton" class="row" style="display:none;">
     <div class="col-sm-1 panel-heading"><i class="fas fa-arrows-alt-v"></i></div>
     <div class="element-title col-sm-5"></div>
@@ -152,22 +147,91 @@
     <div class="col-sm-1">
         <i data-toggle="tooltip" class="far fa-question-circle element-tip" data-original-title=""
            data-placement="right"></i>
+        <i class="far fa-edit"  data-element="" data-toggle="modal" data-target="#edit-item-modal"></i>
+        <i class="fa fa-trash"  data-element="" data-toggle="modal" data-target="#element-remove-modal"></i>
     </div>
 </div>
+
+
 <script type="application/javascript">
-    updateElements = function () {
-        var panelList = $('#elements');
-        panelList.sortable({
-            handle: '.panel-heading',
-            update: function (event, ui) {
-                $('.element', panelList).each(function (index, elem) {
-                    $(elem).attr("element-weight", index);
-                });
-            }
+    var updateWeight = function() {
+        console.log("bla")
+        $('.element', $('#elements')).each(function (index, elem) {
+            $(elem).attr("element-weight", index);
         });
     };
 
+    var updateElements = function () {
+        $('#elements').sortable({
+            handle: '.panel-heading',
+            update: updateWeight
+        });
+    };
+
+    $("#element-remove-modal").on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var elementId = button.data('element');
+
+        $(this).find("#remove-element-id").val(elementId);
+    });
+
+    $("#element-remove-modal .btn-primary").click(function() {
+        $("#element-remove-modal").modal("toggle");
+
+        $($("#element-remove-modal #remove-element-id").val()).remove();
+
+        updateWeight();
+    });
+
+    $('#edit-item-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var elementId = button.data('element');
+
+        $("#edit-title").val($(elementId).find(".element-title").text());
+
+        var etype = $(elementId).find(".element-type").attr("element-type");
+        var options = [];
+        var name = "";
+        switch (etype){
+            case "radio":
+            case "checkbox":
+                $(elementId + " .element-type input").each(function(index,el){
+                    name = $(el).attr("name");
+                    options.push($(el).val());
+                });
+                break;
+            case "select":
+                $(elementId + "select").attr("name");
+                $(elementId + " .element-type option").each(function(index,el){
+                    options.push($(el).val());
+                });
+                break;
+            default:
+                break;
+        }
+
+        $("#edit-options").val(options.join(";"));
+        $("#edit-options").attr("name", name);
+        $("#edit-options").attr("element-type", etype);
+        $("#edit-options").attr("element-selector", elementId);
+
+    });
+
+    $('#edit-item-modal .btn-primary').click(function () {
+        var $element = $($("#edit-options").attr("element-selector"));
+        var etype = $("#edit-options").attr("element-type");
+        var multiple = etype === "select" && $element.find("select").attr("multiple") === "multiple";
+        $element.find(".element-title").text($("#edit-title").val());
+        $element.find(".element-type").empty().append(buildOptions(etype, multiple,$("#edit-options").val()));
+
+        updateElements();
+
+        $("#edit-item-modal").modal("hide");
+    });
+
     $(function () {
+        updateElements();
+
         $("#limite").datepicker({
             dateFormat: "dd/mm/yy",
             minDate: new Date()
@@ -182,8 +246,13 @@
             var content = createSurveyContent();
 
             var xhr = $.ajax({
+            <#if node??>
+                type: "PUT",
+                url: "<@spring.url '/${course.id}/${nodeDescriptor(node).type}/${node.id}' />",
+            <#else>
                 type: "POST",
                 url: "<@spring.url '/${course.id}/${type}/add' />",
+            </#if>
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('${_csrf.headerName}', "${_csrf.token}");
                 },
@@ -202,7 +271,8 @@
         });
     });
 
-    var itemId = 0;
+    var itemId = $("#elements .element").length;
+
     $("#modal-type").change(function () {
         $("#modal-multi-content").val("");
         if ($(this).val() === "txt") {
@@ -215,7 +285,12 @@
     $("#item-modal .btn-primary").click(function () {
 
         var element = $("#element-skeleton").clone();
-        $(element).attr("id", $(element).attr("id") + "-" + itemId);
+        var id = $(element).attr("id") + "-new-" + itemId;
+
+        $(element).find(".fa-edit").attr("data-element", "#"+id);
+        $(element).find(".fa-trash").attr("data-element", "#"+id);
+
+        $(element).attr("id", id);
         $(element).addClass("element");
         $(element).attr("element-weight", itemId);
         $(element).removeAttr("style", "");
@@ -223,72 +298,16 @@
 
         itemId++;
 
-        switch ($("#modal-type").val()) {
-            case "msel":
-            case "sel":
-                var el = $("<select class=\"form-control\">");
-                if ($("#modal-type").val() === "msel") {
-                    $(el).attr('multiple', 'multiple');
-                }
-                var contenido = $("#modal-multi-content").val();
+        var elementType = $("#modal-type").val();
+        var multiple = elementType === "mselect";
 
-                contenido.split(";").forEach(function (e, i) {
-                    var option = $("<option>");
-                    $(option).val(e.trim());
-                    $(option).text(e.trim());
-                    $(el).append(option);
-                });
-
-                $(element).find(".element-type").attr('element-type', 'select').append(el);
-                break;
-            case "cb":
-                var contenido = $("#modal-multi-content").val();
-                var name = $("#modal-title").val().trim().replace(" ", "_");
-
-                contenido.split(";").forEach(function (e, i) {
-                    var container = $("<div class=\"form-check\">");
-
-                    var label = $("<label class=\"form-check-label\">");
-                    $(label).text(e);
-                    var option = $("<input class=\"form-check-input\" type=\"checkbox\" >");
-                    $(option).attr("name", name);
-                    $(option).val(e.trim());
-
-                    $(container).append(option);
-                    $(container).append(label);
-
-                    $(element).find(".element-type").attr('element-type', 'checkbox').append(container);
-                });
-
-                break;
-            case "rb":
-                var contenido = $("#modal-multi-content").val();
-                var name = $("#modal-title").val().trim().replace(" ", "_");
-
-                contenido.split(";").forEach(function (e, i) {
-                    var container = $("<div class=\"form-check\">");
-
-                    var label = $("<label class=\"form-check-label radio\">");
-                    $(label).text(e);
-                    var option = $("<input class=\"form-check-input\" type=\"radio\" >");
-                    var id = "rb-" + $(element).attr("element-weight") + i;
-                    $(option).attr("name", name);
-                    $(option).attr("id", id);
-                    $(label).attr("for", id);
-                    $(option).val(e.trim());
-
-                    $(container).append(option);
-                    $(container).append(label);
-
-                    $(element).find(".element-type").attr('element-type', 'radio').append(container);
-                });
-
-                break;
-            case "txt":
-            default:
-                var el = $("<input type='text' class=\"form-control\" disabled>");
-                $(element).find(".element-type").attr('element-type', 'text').append(el);
+        if(multiple) {
+            elementType = elementType.substr(1);
         }
+
+        $(element).find(".element-type").append(buildOptions(elementType, multiple, $("#modal-multi-content").val()));
+
+        $(element).find(".element-type").attr('element-type', elementType);
 
         $(element).find('.element-tip').attr('data-original-title', $('#modal-tip').val());
 

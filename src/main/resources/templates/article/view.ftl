@@ -17,9 +17,8 @@
           type='text/css'/>
 </head>
 <body>
-
+<#assign subNavbar = true />
 <#include "../includes/nav-bar.ftl"/>
-<#include "../includes/node.sub-nav-bar.ftl" />
 
 <main class="container">
     <div class="container white row">

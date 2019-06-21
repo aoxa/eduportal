@@ -89,9 +89,6 @@ content='<label>Nombre</label><input class="form-control" name="name" type="text
         var content = {};
         content.name = $("input[name='name']").val();
         content.roles = $("#addGroupRoles").val().split(",");
-        $("#addGroupRoles").val("");
-        $("input[name='name']").val("");
-        $("#addGroupRoles").select2("val", "");
 
         $button.attr("disabled", "disabled");
 
@@ -110,6 +107,9 @@ content='<label>Nombre</label><input class="form-control" name="name" type="text
                 $("#group-modal").modal('toggle');
                 $("#group-list-content").html(data);
                 $button.removeAttr("disabled");
+                $("#addGroupRoles").val("");
+                $("input[name='name']").val("");
+                $("#addGroupRoles").select2("val", "");
             }
         });
 

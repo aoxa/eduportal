@@ -1,4 +1,4 @@
-package com.eduportal.web;
+package com.eduportal.web.view;
 
 import com.eduportal.auth.model.Role;
 import com.eduportal.auth.model.User;

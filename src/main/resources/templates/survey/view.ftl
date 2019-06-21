@@ -11,9 +11,8 @@
     <link href="<@spring.url '/resources/css/form.css' />" rel="stylesheet">
 </head>
 <body>
-
+<#assign subNavbar = true />
 <#include "../includes/nav-bar.ftl"/>
-<#include "../includes/node.sub-nav-bar.ftl" />
 
 <main class="container">
     <div class="container white row">
@@ -64,6 +63,7 @@
         </div>
     </#list>
     </div>
+
     <div>
         <button id="answer" class="btn btn-success">Contestar</button>
     </div>
@@ -77,7 +77,7 @@
                 content.elements.push(createElement(e,$(e).attr("element-name"), false));
             });
 
-            $.ajax({
+            var xhr = $.ajax({
                 type: "POST",
                 url: "<@spring.url '/${node.course.id}/${nodeDescriptor(node).type}/${node.id}/reply' />",
                 beforeSend: function (xhr) {
@@ -88,14 +88,16 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                success: function(data, textStatus, request) {
-                    //window.location = request.getResponseHeader('location');
+                statusCode: {
+                    201: function (data, textStatus, jqXHR) {
+                        window.location = xhr.getResponseHeader('location');
+                    }
                 }
+
             });
         });
     </script>
 <#if canAnswer(node)>
-
 </#if>
 <#if isCourseAuthority(node.course)>
     <div class="container white">

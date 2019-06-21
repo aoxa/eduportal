@@ -31,7 +31,7 @@ public class ViewAspect {
         Method method = signature.getMethod();
         User user = securityService.findLoggedInUser();
         ViewEvent viewEvent = method.getAnnotation(ViewEvent.class);
-        Event event = null;
+
         switch (viewEvent.pluggedTo()) {
             case NODE:
             default:

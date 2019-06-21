@@ -18,9 +18,8 @@
     <script src="<@spring.url '/resources/js/node.functions.js' />"></script>
 </head>
 <body>
-
+<#assign subNavbar = true />
 <#include "../includes/nav-bar.ftl" />
-<#include "../includes/node.sub-nav-bar.ftl" />
 
 <main role="main" class="container">
     <h1 class="mt-5">Agregar nuevo articulo</h1>
