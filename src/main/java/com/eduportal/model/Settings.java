@@ -10,7 +10,7 @@ public class Settings<T extends Serializable> {
     @Column(unique = true)
     private String name;
 
-    @Lob
+    @Column(columnDefinition = "BYTEA")
     private Serializable value;
 
     public String getName() {

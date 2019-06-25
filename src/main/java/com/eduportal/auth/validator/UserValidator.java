@@ -10,8 +10,6 @@ import org.springframework.validation.Validator;
 
 @Component
 public class UserValidator implements Validator {
-    @Autowired
-    private UserService userService;
 
     public boolean supports(Class<?> clazz) {
         return User.class.equals(clazz);

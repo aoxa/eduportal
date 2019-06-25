@@ -8,7 +8,11 @@ import com.eduportal.repository.SettingsRepository;
 import com.eduportal.web.SessionMessage;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModel;
+import freemarker.template.utility.DeepUnwrap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -16,6 +20,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,6 +31,9 @@ public class HelperMacroInterceptor  extends AbstractMacroInterceptor {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    protected MessageSource messageSource;
 
     @Autowired
     private SettingsRepository settingsRepository;
@@ -46,6 +54,20 @@ public class HelperMacroInterceptor  extends AbstractMacroInterceptor {
         macros.put("getSetting", (params) -> {
             Optional<Settings> setting = settingsRepository.findById(params.get(0).toString());
             return setting.isPresent()? setting.get().getValue():null;
+        });
+
+        macros.put("i18n", (params)-> {
+            Object[] args = null;
+
+            if(params.size() > 1) {
+                args = ((List) DeepUnwrap.permissiveUnwrap((TemplateModel) params.get(1))).toArray();
+            }
+
+            try {
+                return messageSource.getMessage(params.get(0).toString(), args, null);
+            } catch (NoSuchMessageException ex) {
+                return params.get(0).toString();
+            }
         });
 
         macros.put("hasSessionMessage", (params) -> {

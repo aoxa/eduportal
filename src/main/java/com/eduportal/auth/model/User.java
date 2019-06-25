@@ -3,6 +3,7 @@ package com.eduportal.auth.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,6 +31,7 @@ public class User implements Serializable {
 
     private String lastName;
 
+    @Email
     private String email;
 
     private Boolean active;

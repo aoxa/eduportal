@@ -1,36 +1,29 @@
-
 plugins {
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
     id 'java'
-    id 'maven'
-    id 'com.gradle.build-scan' version '1.16'
-    id 'org.springframework.boot' version '2.1.1.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
 }
 
+apply plugin: 'io.spring.dependency-management'
+
 group = 'com.eduportal'
-version = '2.1.1.RELEASE'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
 
-description = """auth"""
-
-
-
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 task stage(dependsOn: ['build', 'clean'])
 build.mustRunAfter clean
 
 repositories {
-     maven { url "http://repo.maven.apache.org/maven2" }
-}
-
-bootJar {
-    mainClassName = 'com.eduportal.WebApplication'
+    mavenCentral()
 }
 
 bootRun {
@@ -38,40 +31,19 @@ bootRun {
 }
 
 dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-dependencies', version:version
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:version
-
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:version
-
-    compile('org.apache.tomcat.embed:tomcat-embed-jasper')
-
-    compile group: 'org.springframework.security', name: 'spring-security-taglibs'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version:version
-
-    compile group: 'javax.servlet', name: 'jstl', version:'1.2'
-    compile group: 'com.sun.mail', name: 'javax.mail'
-    compile group: 'org.freemarker', name:'freemarker'
-
-    // https://mvnrepository.com/artifact/org.postgresql/postgresql
-    compile group: 'org.postgresql', name: 'postgresql'
-
-    // Use MySQL Connector-J
-    //compile group: 'mysql', name:'mysql-connector-java'
-
-    //runtime group: 'org.hsqldb', name: 'hsqldb', version:'2.4.1'
-
-    components {
-        withModule('org.springframework:spring-beans') {
-            allVariants {
-                withDependencyConstraints {
-                    it.findAll { it.name == 'snakeyaml' } .each { it.version { strictly '1.19' } }
-                }
-            }
-        }
-    }
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    compile 'com.sun.mail:javax.mail'
+    compile 'org.simplejavamail:simple-java-mail:5.1.7'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }

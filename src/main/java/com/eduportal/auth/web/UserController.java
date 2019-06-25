@@ -8,7 +8,11 @@ import com.eduportal.auth.repository.GroupRepository;
 import com.eduportal.auth.repository.RoleRepository;
 import com.eduportal.auth.service.SecurityService;
 import com.eduportal.auth.service.UserService;
+import com.eduportal.auth.validator.RegistrationValidator;
 import com.eduportal.auth.validator.UserValidator;
+import com.eduportal.auth.web.form.RegistrationForm;
+import com.eduportal.service.MailService;
+import com.eduportal.web.helper.RequestHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -33,7 +38,9 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
     @Autowired
-    private UserValidator userValidator;
+    private RegistrationValidator registrationValidator;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping("/registration")
     public String registration(Model model, @RequestParam String message){
@@ -42,15 +49,24 @@ public class UserController {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Registration registration = objectMapper.readValue(content, Registration.class);
-            if (null == userService.findById(registration.getUserId())) {
-                return "error";
-            }
 
             User user = userService.findById(registration.getUserId());
 
+            if (null == user) {
+                return "error";
+            }
+
+            RegistrationForm form = new RegistrationForm();
+
             decorate(user, registration);
 
-            model.addAttribute("userForm", user);
+            form.setUser(user);
+
+            boolean isParent = user.getRoles().stream().filter(r->r.getName().equals("parent")).count() != 0;
+
+            model.addAttribute("isParent", isParent);
+
+            model.addAttribute("form", form);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,16 +83,36 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
-        userValidator.validate(userForm, bindingResult);
+    public String registration(Model model, @ModelAttribute("form") RegistrationForm registrationForm,
+                               BindingResult bindingResult, HttpServletRequest request) {
+        registrationValidator.validate(registrationForm, bindingResult);
+
+        User user = registrationForm.getUser();
+
+        boolean isParent = user.getRoles().stream().filter(r->r.getName().equals("parent")).count() != 0;
 
         if(bindingResult.hasErrors()) {
+            model.addAttribute("isParent", isParent);
+
             return "registration";
         }
 
-        userService.save(userForm);
+        userService.save(user);
 
-        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
+        if(isParent) {
+            User child = new User();
+            child.setParent(user);
+            child.setEmail(registrationForm.getChildEmail());
+            child.setName(registrationForm.getChildName());
+            child.setLastName(user.getLastName());
+            child.getRoles().add(roleRepository.findByName("pupil"));
+            child.getGroups().add(groupRepository.findByName("pupil"));
+            userService.save(child);
+
+            mailService.sendInvitation(RequestHelper.createURL(request, null), child);
+        }
+
+        securityService.autoLogin(user.getUsername(), user.getPasswordConfirm());
 
         return "redirect:/welcome";
     }
