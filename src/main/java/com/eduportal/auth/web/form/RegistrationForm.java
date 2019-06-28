@@ -4,28 +4,13 @@ import com.eduportal.auth.model.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistrationForm {
     private User user;
-    @Email
-    private String childEmail;
-    private String childName;
 
-    public String getChildName() {
-        return childName;
-    }
-
-    public void setChildName(String childName) {
-        this.childName = childName;
-    }
-
-    public String getChildEmail() {
-        return childEmail;
-    }
-
-    public void setChildEmail(String childEmail) {
-        this.childEmail = childEmail;
-    }
+    private List<Child> children = new ArrayList<>();
 
     public User getUser() {
         return user;
@@ -33,5 +18,36 @@ public class RegistrationForm {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Child> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Child> children) {
+        this.children = children;
+    }
+
+    public static class Child {
+        @Email
+        private String email;
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
     }
 }

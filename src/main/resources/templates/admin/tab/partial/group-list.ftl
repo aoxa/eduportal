@@ -1,6 +1,3 @@
-<#if ! groups?has_content>
-No hay grupos cargados
-<#else>
 <table class="table table-hover">
     <thead>
     <tr>
@@ -10,7 +7,7 @@ No hay grupos cargados
     </tr>
     </thead>
     <tbody>
-    <#list groups as group>
+    <#list groups.content as group>
     <tr>
         <th scope="row">${group.id}</th>
         <td>${group.name}</td>
@@ -25,4 +22,3 @@ No hay grupos cargados
 
     </tbody>
 </table>
-</#if>

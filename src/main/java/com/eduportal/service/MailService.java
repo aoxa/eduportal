@@ -8,6 +8,7 @@ import com.eduportal.model.Settings;
 import com.eduportal.repository.SettingsRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
@@ -17,12 +18,11 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Properties;
 
+@Slf4j
 @Service
 public class MailService {
     @Autowired
@@ -49,6 +49,7 @@ public class MailService {
     }
 
     public void sendInvitation(String host, User user) {
+        log.info("Sending invitation to user {}", user.getEmail());
         Registration registration = new Registration();
         user.getRoles().stream().map(Role::getName).forEach(role -> registration.getRoles().add(role));
         user.getGroups().stream().map(Group::getName).forEach(group -> registration.getGroups().add(group));

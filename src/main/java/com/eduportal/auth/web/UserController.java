@@ -100,16 +100,19 @@ public class UserController {
         userService.save(user);
 
         if(isParent) {
-            User child = new User();
-            child.setParent(user);
-            child.setEmail(registrationForm.getChildEmail());
-            child.setName(registrationForm.getChildName());
-            child.setLastName(user.getLastName());
-            child.getRoles().add(roleRepository.findByName("pupil"));
-            child.getGroups().add(groupRepository.findByName("pupil"));
-            userService.save(child);
+            for(RegistrationForm.Child child : registrationForm.getChildren()) {
+                User newUser = new User();
+                newUser.setParent(user);
 
-            mailService.sendInvitation(RequestHelper.createURL(request, null), child);
+                newUser.setEmail(child.getEmail());
+                newUser.setName(child.getName());
+                newUser.setLastName(user.getLastName());
+                newUser.getRoles().add(roleRepository.findByName("pupil"));
+                newUser.getGroups().add(groupRepository.findByName("pupil"));
+                userService.save(newUser);
+
+                mailService.sendInvitation(RequestHelper.createURL(request, null), newUser);
+            }
         }
 
         securityService.autoLogin(user.getUsername(), user.getPasswordConfirm());

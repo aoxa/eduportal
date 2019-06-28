@@ -13,7 +13,7 @@
                 </button>
             </div>
             <div class="modal-body">
-            ${content}
+                ${content}
             </div>
 
             <div class="modal-footer">
@@ -37,13 +37,43 @@
 
 <#macro nodeIcon node>
     <#switch node.type>
-    <#case "article">
+        <#case "article">
     <i class="far fa-newspaper"></i>
-    <#break >
-    <#case "survey">
+            <#break >
+        <#case "survey">
     <i class="fas fa-question"></i>
-    <#break>
-    <#default>
+            <#break>
+        <#default>
     <i class="fas fa-question"></i>
     </#switch>
+</#macro>
+
+<#macro pagination id paginator url result>
+    <#if paginator.totalPages != 1 >
+        <nav aria-label="Pagination">
+            <ul id="${id}" class="pagination">
+                    <#list 1..paginator.totalPages as num>
+                        <li class="page-item <#if paginator.number+1 == num>active</#if>">
+                            <div class="page-link" page="${num-1}">${num}</div>
+                        </li>
+                    </#list>
+            </ul>
+        </nav>
+        <script>
+            $("#${id} .page-link").click(function () {
+                if ($(this).closest(".page-item").hasClass("active")) return false;
+
+                var $this = $(this);
+
+                $.get("${url}" + "?page=" + $(this).attr("page"), function (data) {
+                    $("#${id} .page-item").removeClass("active");
+
+                    $this.closest(".page-item").addClass("active");
+
+                    $("#${result}").html(data);
+                });
+            });
+
+        </script>
+    </#if>
 </#macro>

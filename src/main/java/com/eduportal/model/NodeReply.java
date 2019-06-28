@@ -16,7 +16,7 @@ public class NodeReply<T extends Node> extends BaseEntity {
     @OneToOne
     private User user;
 
-    @ManyToOne(targetEntity = Node.class)
+    @ManyToOne(targetEntity = Node.class, cascade = CascadeType.REFRESH)
     private T parent;
 
     public User getUser() {

@@ -47,12 +47,14 @@ public class RegistrationValidator implements Validator {
         boolean isParent = user.getRoles().stream().filter(r->r.getName().equals("parent")).count() != 0;
 
         if(isParent) {
+            /*
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "childName", "NotEmpty");
 
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "childEmail", "NotEmpty");
             if(!emailValidator.isValid(form.getChildEmail(), null)) {
                 errors.rejectValue("childEmail", "Email.userForm.childEmail.not.email");
             }
+            */
         }
 
     }

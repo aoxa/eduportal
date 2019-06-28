@@ -1,7 +1,17 @@
+<#include "../../includes/macros.ftl" />
+
 <h5 class="border-bottom">Grupos</h5>
 <div>
     <div id="group-list-content" class="form-group">
-    <#include "partial/group-list.ftl" />
+    <#if ! groups.content?has_content>
+    No hay grupos cargados
+    <#else>
+        <div id="group-listing">
+            <#include "partial/group-list.ftl" />
+        </div>
+        <#assign url><@spring.url "/admin/users/group/list" /></#assign>
+        <@pagination id="group-paginator" paginator=groups url=url result="group-listing"/>
+    </#if>
     </div>
     <button data-original-title="Agregar nuevo elemento" data-placement="top" type="button"
             class="btn btn-info" id="add-group-button"
@@ -12,25 +22,14 @@
 <h5 class="border-bottom">Roles</h5>
 <div>
     <div class="form-group">
-    <#if ! roles?has_content>
+    <#if ! roles.content?has_content>
         No hay roles cargados
     <#else>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Role Name</th>
-            </tr>
-            </thead>
-            <tbody>
-                <#list roles as role>
-                <tr>
-                    <th scope="row">${role.id}</th>
-                    <td>${role.name}</td>
-                </tr>
-                </#list>
-            </tbody>
-        </table>
+        <div id="role-listing">
+        <#include "partial/role-list.ftl" />
+        </div>
+        <#assign url><@spring.url "/admin/users/role/list" /></#assign>
+        <@pagination id="role-paginator" paginator=roles url=url result="role-listing"/>
     </#if>
     </div>
 </div>

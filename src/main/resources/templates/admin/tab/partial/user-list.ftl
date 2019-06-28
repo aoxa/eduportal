@@ -7,7 +7,7 @@
     </tr>
     </thead>
     <tbody>
-    <#list users as user>
+    <#list users.content as user>
     <tr>
         <th scope="row">${user.id}</th>
         <td>${user.username!"not set yet"}</td>

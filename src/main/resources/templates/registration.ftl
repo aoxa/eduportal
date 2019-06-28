@@ -57,19 +57,35 @@
             </div>
         </div>
         <#if isParent>
-        <div class="form-group row">
-            <label class="col-sm-6"><@spring.message "registration.child.name" /></label>
-            <div class="col-sm-6">
-            <@spring.formInput "form.childName" "class='form-control'"/>
+        <div id="children">
+            <#list form.children as child>
+                <div class="child">
+                    <div class="form-group row">
+                        <label class="col-sm-6"><@spring.message "registration.child.name" /></label>
+                        <div class="col-sm-6 input-group">
+            <@spring.formInput "form.children[${child?index}].name" "class='form-control'"/>
             <@spring.showErrors "" />
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-6"><@spring.message "registration.child.email" /></label>
-            <div class="col-sm-6">
-            <@spring.formInput "form.childEmail" "class='form-control'"/>
+                        <#if child?index == (form.children?size - 1)>
+                            <div class="input-group-append">
+                                <button id="add-child" class="btn btn-outline-success" type="button">+</button>
+                            </div>
+                        <#else>
+                            <div class="input-group-append">
+                                <button class="remove-child btn btn-outline-danger" type="button">-</button>
+                            </div>
+                        </#if>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-6"><@spring.message "registration.child.email" /></label>
+                        <div class="col-sm-6">
+            <@spring.formInput "form.children[${child?index}].email" "class='form-control'"/>
             <@spring.showErrors "" />
-            </div>
+                        </div>
+                    </div>
+                </div>
+            </#list>
+
         </div>
         </#if>
 
@@ -77,10 +93,48 @@
                name="${_csrf.parameterName}"
                value="${_csrf.token}"/>
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit"><@spring.message "registration.submit" /></button>
+        <button class="btn btn-lg btn-primary btn-block"
+                type="submit"><@spring.message "registration.submit" /></button>
     </form>
 
 </div>
+<script>
+    var index = ${form.children?size};
+
+    $("#add-child").click(function () {
+        var $wrapper = $("<div>").addClass("child");
+        var $row = $("<div>").addClass("row").addClass("form-group");
+        var $label = $("<label>").addClass("col-sm-6");
+        var $input = $("<div>").addClass("col-sm-6");
+        var $remove = $("<div>").addClass("input-group-append")
+                .append($("<button>")
+                        .attr("type", "button")
+                        .addClass("remove-child")
+                        .addClass("btn")
+                        .addClass("btn-outline-danger")
+                        .text("-"));
+
+        var label = $label.clone().text('<@spring.message "registration.child.email" />');
+
+        var input = $input.clone().append($("<input>").addClass("form-control").attr("name", "children[" + index + "].email"));
+
+        $wrapper.prepend($row.clone().append(label).append(input));
+
+
+        label = $label.clone().text("<@spring.message "registration.child.name" />");
+
+        input = $input.clone().addClass("input-group").append($("<input>").addClass("form-control")
+                .attr("name", "children[" + index + "].name")).append($remove);
+
+        $wrapper.prepend($row.clone().append(label).append(input));
+
+        $("#children").prepend($wrapper);
+
+        index++;
+
+        return false;
+    });
+</script>
 
 </body>
 </html>

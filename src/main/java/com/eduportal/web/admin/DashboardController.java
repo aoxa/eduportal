@@ -14,6 +14,7 @@ import com.eduportal.web.admin.form.InviteUserForm;
 import com.eduportal.web.admin.form.MailConfigForm;
 import com.eduportal.web.helper.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 @Secured("ROLE_admin")
 @RequestMapping("/admin")
 public class DashboardController {
+    public static final int PAGE_SIZE = 5;
+    public static final int INITIAL_PAGE = 0;
     @Autowired
     private GroupRepository groupRepository;
 
@@ -87,10 +90,9 @@ public class DashboardController {
 
     @GetMapping("/users")
     public String displayUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
-        model.addAttribute("groups", groupRepository.findAll());
-        model.addAttribute("roles", roleRepository.findAll());
-        model.addAttribute("roleNames", roleRepository.findAll().stream().map(Role::getName).collect(Collectors.toList()));
+        model.addAttribute("users", userRepository.findAll(PageRequest.of(INITIAL_PAGE, PAGE_SIZE)));
+        model.addAttribute("groups", groupRepository.findAll(PageRequest.of(INITIAL_PAGE, PAGE_SIZE)));
+        model.addAttribute("roles", roleRepository.findAll(PageRequest.of(INITIAL_PAGE, PAGE_SIZE)));
 
         return "admin/users";
     }
@@ -129,7 +131,7 @@ public class DashboardController {
     public String removeUser(Model model, @PathVariable User user) {
         userRepository.delete(user);
 
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userRepository.findAll(PageRequest.of(1, PAGE_SIZE)));
 
         return "admin/tab/partial/user-list";
     }
@@ -143,6 +145,20 @@ public class DashboardController {
         groupRepository.save(group);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/users/role/list")
+    public String getRoleList(Model model, Integer page) {
+        model.addAttribute("roles", roleRepository.findAll(PageRequest.of(page, PAGE_SIZE)));
+
+        return "admin/tab/partial/role-list";
+    }
+
+    @GetMapping("/users/group/list")
+    public String getGroupList(Model model, Integer page) {
+        model.addAttribute("groups", groupRepository.findAll(PageRequest.of(page, PAGE_SIZE)));
+
+        return "admin/tab/partial/group-list";
     }
 
     @PostMapping("/users/groups/add")

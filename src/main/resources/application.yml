@@ -5,9 +5,12 @@ spring:
     name: eduportal
   jpa:
     show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: false
+        jdbc.lob.non_contextual_creation: true
     hibernate:
       ddl-auto: update
-      jdbc.lob.non_contextual_creation: true
     generate-ddl: true
   datasource:
     username: esnterplluemge
