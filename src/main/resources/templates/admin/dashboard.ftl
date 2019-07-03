@@ -67,7 +67,6 @@
                 </div>
                 <button class="btn btn-primary" type="submit">submit</button>
             </form>
-            <button class="btn btn-success">test</button>
         </main>
     </div>
 </div>
@@ -84,11 +83,6 @@
     feather.replace()
 </script>
 
-<script>
-    $(".btn.btn-success").click(function () {
-        $.get('<@spring.url '/admin/test' />');
-    })
-</script>
 <!-- Graphs -->
 </body>
 </html>

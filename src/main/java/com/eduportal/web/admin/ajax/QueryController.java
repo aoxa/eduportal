@@ -29,7 +29,7 @@ public class QueryController {
 
     @GetMapping("/admin/group/list.json")
     public @ResponseBody
-    List<Object> getGroupList(@RequestAttribute String q) {
+    List<Object> getGroupList(String q) {
         return groupRepository.findAllByNameIsLike("%"+q+"%").stream()
                 .map(e -> new Entry<>(e.getName(), e.getId()))
                 .collect(Collectors.toList());

@@ -48,32 +48,34 @@
     </#switch>
 </#macro>
 
+<#macro spinner>
+    <div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>
+</#macro>
+
 <#macro pagination id paginator url result>
-    <#if paginator.totalPages != 1 >
-        <nav aria-label="Pagination">
-            <ul id="${id}" class="pagination">
-                    <#list 1..paginator.totalPages as num>
-                        <li class="page-item <#if paginator.number+1 == num>active</#if>">
-                            <div class="page-link" page="${num-1}">${num}</div>
-                        </li>
-                    </#list>
-            </ul>
-        </nav>
-        <script>
-            $("#${id} .page-link").click(function () {
-                if ($(this).closest(".page-item").hasClass("active")) return false;
+    <nav aria-label="Pagination">
+        <ul id="${id}" class="pagination">
+                <#list 1..paginator.totalPages as num>
+                    <li class="page-item <#if paginator.number+1 == num>active</#if>"><div class="page-link" page="${num-1}">${num}</div></li>
+                </#list>
+        </ul>
+    </nav>
+<script>
+    $("#${id} .page-link").click(function () {
+        if($(this).closest(".page-item").hasClass("active")) return false;
 
-                var $this = $(this);
+        var $this = $(this);
 
-                $.get("${url}" + "?page=" + $(this).attr("page"), function (data) {
-                    $("#${id} .page-item").removeClass("active");
+        $("#${result}").append('<div class="text-center overlay" ><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>');
 
-                    $this.closest(".page-item").addClass("active");
+        $.get("${url}"+"?page="+$(this).attr("page"), function(data) {
+            $("#${id} .page-item").removeClass("active");
 
-                    $("#${result}").html(data);
-                });
-            });
+            $this.closest(".page-item").addClass("active");
 
-        </script>
-    </#if>
+            $("#${result}").html(data);
+        });
+    });
+
+</script>
 </#macro>

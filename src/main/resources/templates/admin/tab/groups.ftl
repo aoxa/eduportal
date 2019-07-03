@@ -4,7 +4,7 @@
 <div>
     <div id="group-list-content" class="form-group">
     <#if ! groups.content?has_content>
-    No hay grupos cargados
+        No hay grupos cargados
     <#else>
         <div id="group-listing">
             <#include "partial/group-list.ftl" />
@@ -21,7 +21,7 @@
 </div>
 <h5 class="border-bottom">Roles</h5>
 <div>
-    <div class="form-group">
+    <div class="form-group" style="position: relative;">
     <#if ! roles.content?has_content>
         No hay roles cargados
     <#else>

@@ -10,8 +10,14 @@
         </li>
         <li class="nav-item">
             <a class="nav-link <#if active == "users">active</#if>" href="<@spring.url '/admin/users' />">
-                <span data-feather="users"></span>
+                <span data-feather="user"></span>
                 Usuarios
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <#if active == "groups">active</#if>" href="<@spring.url '/admin/groups' />">
+                <span data-feather="users"></span>
+                Grupos
             </a>
         </li>
 

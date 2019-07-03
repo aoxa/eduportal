@@ -58,6 +58,7 @@
         </div>
         <#if isParent>
         <div id="children">
+            <#if form.children?has_content>
             <#list form.children as child>
                 <div class="child">
                     <div class="form-group row">
@@ -85,6 +86,25 @@
                     </div>
                 </div>
             </#list>
+            <#else >
+                <div class="child">
+                    <div class="form-group row">
+                        <label class="col-sm-6"><@spring.message "registration.child.name" /></label>
+                        <div class="col-sm-6 input-group">
+                        <@spring.formInput "form.children[0].name" "class='form-control'"/>
+                            <div class="input-group-append">
+                                <button id="add-child" class="btn btn-outline-success" type="button">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-6"><@spring.message "registration.child.email" /></label>
+                        <div class="col-sm-6">
+                        <@spring.formInput "form.children[0].email" "class='form-control'"/>
+                        </div>
+                    </div>
+                </div>
+            </#if>
 
         </div>
         </#if>
@@ -132,8 +152,25 @@
 
         index++;
 
+        appendRemoveChildHandlers();
+
         return false;
     });
+
+    function appendRemoveChildHandlers() {
+        $(".remove-child").click(function () {
+            var childName = $(this).closest(".form-control").attr("name");
+
+            console.log($(this).closest(".form-control"))
+
+            var num = childName.replace("children[","").replace("].name", "");
+            var childEmail = $("input[name="+childName.replace(".name", ".email")+"]");
+
+            console.log(num)
+            console.log(childEmail)
+        });
+    }
+
 </script>
 
 </body>

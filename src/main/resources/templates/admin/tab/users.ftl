@@ -13,13 +13,25 @@
 <div class="section-content">
     <div class="form-group">
         <label>Nombre de usuario</label>
-        <input type="hidden" id="user-complete">
+        <input type="hidden" class="user-complete" >
     </div>
     <div class="form-group">
         <label>Nombre del grupo</label>
-        <input type="hidden" id="group-complete">
+        <input type="hidden" class="group-complete">
     </div>
     <button id="map-user" class="btn btn-success">Agregar</button>
+</div>
+<h5 class="border-bottom">Asignar rol</h5>
+<div class="section-content">
+    <div class="form-group">
+        <label>Nombre de usuario</label>
+        <input type="hidden" class="user-complete" >
+    </div>
+    <div class="form-group">
+        <label>Nombre del rol</label>
+        <input type="hidden" class="role-complete" >
+    </div>
+    <button id="map-user-rol" class="btn btn-success">Agregar</button>
 </div>
 
 <@modal modalId='user-remove-modal' header='' content='Desea eliminar el usuario?' footerAccept='Eliminar'
@@ -74,6 +86,15 @@ content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
         var user = $("#user-complete").val();
         var group = $("#group-complete").val();
         $.get("<@spring.url "/admin/users/map" />?user=" + user + "&group=" + group);
+    });
+
+    $("#map-user-rol").click(function () {
+        var $section = $(this).closest(".section-content");
+
+        var user = $section.find(".user-complete").val();
+        var role = $section.find(".role-complete").val();
+
+        $.get("<@spring.url "/admin/users/map" />?user=" + user + "&role=" + role);
     });
 
     $("#user-remove-modal .btn-primary").click(function () {
@@ -143,7 +164,7 @@ content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
         });
     });
 
-    $("#user-complete").select2({
+    $(".user-complete").select2({
         ajax: {
             url: "<@spring.url "/admin/user/list.json"/>",
             data: function (term, page) {
@@ -156,6 +177,24 @@ content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
             }
         },
         width: "100%",
+        minimumInputLength: 2,
+        theme: "classic"
+    });
+
+    $(".role-complete").select2({
+        ajax: {
+            url: "<@spring.url "/admin/role/list.json"/>",
+            data: function (term, page) { // page is the one-based page number tracked by Select2
+                return {
+                    q: term
+                };
+            }, dataType: "json",
+            results: function (data, page) {
+                return {results: data};
+            }
+        },
+        width: "100%",
+        multiple: false,
         minimumInputLength: 2,
         theme: "classic"
     });
@@ -197,7 +236,7 @@ content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
         theme: "classic"
     });
 
-    $("#group-complete").select2({
+    $(".group-complete").select2({
         ajax: {
             url: "<@spring.url "/admin/group/list.json"/>",
             dataType: "json",
