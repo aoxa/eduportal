@@ -13,10 +13,12 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.template.*;
 import freemarker.template.utility.DeepUnwrap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
@@ -26,8 +28,6 @@ public class IndexController {
     private CourseRepository courseRepository;
     @Autowired
     private SecurityService securityService;
-    @Autowired
-    private HasAuthority hasAuthority;
 
     @GetMapping({"/", "/welcome"})
     public String welcome(Model model) {

@@ -51,6 +51,10 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public User findLoggedInUser() {
+        if(null == SecurityContextHolder.getContext() || null == SecurityContextHolder.getContext().getAuthentication()) {
+            return null;
+        }
+
         Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if( userDetails instanceof UserDetailService.UserDetailsWrapper) {

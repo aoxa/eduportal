@@ -184,7 +184,7 @@ public class DashboardController {
         model.addAttribute("groups", groupRepository.findAll());
         return "admin/tab/partial/group-list";
     }
-    
+
     @DeleteMapping("/users/{user}")
     public String removeUser(Model model, @PathVariable User user) {
         userRepository.delete(user);

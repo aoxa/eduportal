@@ -158,16 +158,28 @@
     });
 
     function appendRemoveChildHandlers() {
+        $(".remove-child").unbind("click");
+
         $(".remove-child").click(function () {
-            var childName = $(this).closest(".form-control").attr("name");
+            var childName = $(this).closest(".input-group").find("input.form-control");
 
-            console.log($(this).closest(".form-control"))
+            var num = childName.attr("name").replace("children[","").replace("].name", "");
 
-            var num = childName.replace("children[","").replace("].name", "");
-            var childEmail = $("input[name="+childName.replace(".name", ".email")+"]");
+            var childEmail = $("input[name='"+childName.attr("name").replace(".name", ".email")+"']");
 
-            console.log(num)
-            console.log(childEmail)
+            $(this).closest(".child").remove();
+
+            console.log(index);
+
+            for(var i = parseInt(num)+1; i < index; i++) {
+                var prefix = 'children['+i+'].';
+                var updatedPrefix = 'children['+(i-1)+'].';
+
+                $("input[name='"+prefix+"name'").attr("name", updatedPrefix+'name');
+                $("input[name='"+prefix+"email'").attr("name", updatedPrefix+'email');
+            }
+
+            index -= 1;
         });
     }
 

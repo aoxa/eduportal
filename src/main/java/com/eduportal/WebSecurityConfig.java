@@ -63,7 +63,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .logout()
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/login")
-                .permitAll();
+                .permitAll()
+                .and()
+                .exceptionHandling().accessDeniedPage("/error/403");
 
     }
 
