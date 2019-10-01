@@ -16,8 +16,8 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="<@spring.url '/resources/js/bootstrap.bundle.min.js' />"></script>
-<#if currentUser??>
-<script src="<@spring.url '/resources/js/common.js' />"></script> 
+<#if currentUser()??>
+<script src="<@spring.url '/resources/js/authenticated.scripts.js' />"></script>
 </#if>
 <script src="https://select2.github.io/select2/select2-3.5.3/select2.js"></script>
 

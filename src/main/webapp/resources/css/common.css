@@ -141,3 +141,29 @@ body {
     background: red;
     color: white;
 }
+
+a.notify {
+    -webkit-animation-name: notify; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    animation-name: notify;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes notify {
+    0%   {background-color: #343a40;}
+    25%  {background-color: #484d53;}
+    50%  {background-color: #5c6166;}
+    75%  {background-color: #484d53;}
+    0%   {background-color: #343a40;}
+}
+
+/* Standard syntax */
+@keyframes notify {
+    0%   {background-color: #343a40;}
+    25%  {background-color: #484d53;}
+    50%  {background-color: #5c6166;}
+    75%  {background-color: #484d53;}
+    0%   {background-color: #343a40;}
+}
