@@ -9,6 +9,9 @@
 <div class="section-content" id="user-listing">
 <#include "partial/user-list.ftl" />
 </div>
+<#assign url><@spring.url "/admin/users/list" /></#assign>
+<@pagination id="user-paginator" paginator=users url=url result="user-listing"/>
+
 <h5 class="border-bottom">Asignar grupo</h5>
 <div class="section-content">
     <div class="form-group">
@@ -61,9 +64,15 @@ content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
         $(this).attr("disabled", "disabled");
 
         var content = {};
+
         content.email = $("#user-email").val();
-        content.groups = $("#user-group").val().split(",");
-        content.roles = $("#user-roles").val().split(",");
+
+        if($("#user-group").val().trim().length > 0) {
+            content.groups = $("#user-group").val().split(",");
+        }
+        if($("#user-roles").val().trim().length > 0) {
+            content.roles = $("#user-roles").val().split(",");
+        }
 
         $.ajax({
             type: "POST",
@@ -83,16 +92,19 @@ content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
     });
 
     $("#map-user").click(function () {
-        var user = $("#user-complete").val();
-        var group = $("#group-complete").val();
+        var $section = $(this).closest(".section-content");
+
+        var user = $section.find("input.user-complete").val();
+        var group = $section.find("input.group-complete").val();
+
         $.get("<@spring.url "/admin/users/map" />?user=" + user + "&group=" + group);
     });
 
     $("#map-user-rol").click(function () {
         var $section = $(this).closest(".section-content");
 
-        var user = $section.find(".user-complete").val();
-        var role = $section.find(".role-complete").val();
+        var user = $section.find("input.user-complete").val();
+        var role = $section.find("input.role-complete").val();
 
         $.get("<@spring.url "/admin/users/map" />?user=" + user + "&role=" + role);
     });

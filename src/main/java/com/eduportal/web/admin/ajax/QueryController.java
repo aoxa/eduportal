@@ -46,7 +46,7 @@ public class QueryController {
     @GetMapping("/admin/user/list.json")
     public @ResponseBody
     List<Object> getUserList(String q) {
-        return userRepository.findAllByUsernameIsLike("%"+q+"%").stream()
+        return userRepository.findAllByUsernameIsLikeIgnoreCase("%"+q+"%").stream()
                 .map(e -> new Entry<>(e.getUsername(), e.getId()))
                 .collect(Collectors.toList());
     }

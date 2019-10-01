@@ -132,3 +132,12 @@ body {
 .nav-item.dropdown {
     cursor: pointer;
 }
+
+.badge {
+    position: absolute;
+    right: 6px;
+    padding: 5px 8px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+}

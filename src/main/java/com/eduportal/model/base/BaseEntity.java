@@ -11,6 +11,7 @@ public abstract class BaseEntity {
     private Long id;
 
     private Date creationDate;
+
     private Date modificationDate;
 
     public Long getId() {

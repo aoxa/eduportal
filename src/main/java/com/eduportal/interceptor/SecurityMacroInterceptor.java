@@ -3,28 +3,16 @@ package com.eduportal.interceptor;
 import com.eduportal.annotation.Interceptor;
 import com.eduportal.auth.model.Role;
 import com.eduportal.auth.model.User;
-import com.eduportal.auth.repository.UserRepository;
 import com.eduportal.auth.service.UserDetailService;
 import com.eduportal.model.Course;
-import com.eduportal.model.Settings;
-import com.eduportal.repository.SettingsRepository;
-import com.eduportal.web.view.functions.HasAuthority;
 import freemarker.template.TemplateBooleanModel;
-import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.utility.DeepUnwrap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Interceptor
 public class SecurityMacroInterceptor extends AbstractMacroInterceptor {

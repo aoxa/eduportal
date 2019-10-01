@@ -31,6 +31,7 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="menu-user">
                     <a class="dropdown-item" onclick="document.forms['logoutForm'].submit()">Logout</a>
                 <#if hasAuthority('admin')><a class="dropdown-item" href="<@spring.url '/admin/dashboard' />">Admin</a></#if>
+                    <a class="dropdown-item">Notificaciones<span class="badge">3</span></a>
                 </div>
             </li>
         </ul>

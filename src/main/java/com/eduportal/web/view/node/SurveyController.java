@@ -1,5 +1,6 @@
 package com.eduportal.web.view.node;
 
+import com.eduportal.annotation.Notification;
 import com.eduportal.auth.service.SecurityService;
 import com.eduportal.auth.service.score.SurveyScoreService;
 import com.eduportal.model.*;
@@ -40,6 +41,7 @@ public class SurveyController {
     @Autowired
     private SessionMessage sessionMessage;
 
+    @Notification
     @PostMapping(value = "/{course}/survey/add")
     public @ResponseBody
     ResponseEntity<String> addSurvey(Model model, @PathVariable("course") Course course, @RequestBody Survey survey,

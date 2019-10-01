@@ -83,6 +83,7 @@ public class DashboardController {
         if (null != group) {
             user.getGroups().add(group);
             group.getUsers().add(user);
+            groupRepository.save(group);
         }
 
         if (null != role) {
@@ -90,13 +91,19 @@ public class DashboardController {
         }
 
         userRepository.save(user);
-        groupRepository.save(group);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/users/role/list")
+    @GetMapping("/users/list")
     public String getRoleList(Model model, Integer page) {
+        model.addAttribute("users", userRepository.findAll(PageRequest.of(page, PAGE_SIZE)));
+
+        return "admin/tab/partial/user-list";
+    }
+
+    @GetMapping("/users/role/list")
+    public String getUserList(Model model, Integer page) {
         model.addAttribute("roles", roleRepository.findAll(PageRequest.of(page, PAGE_SIZE)));
 
         return "admin/tab/partial/role-list";

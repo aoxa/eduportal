@@ -10,7 +10,7 @@ var createSurveyContent = function() {
     });
 
     return content;
-}
+};
 
 buildOptions = function(elementType, multiple, content, name) {
     if(name === undefined) {

@@ -1,5 +1,6 @@
 package com.eduportal.web.view.node;
 
+import com.eduportal.annotation.Notification;
 import com.eduportal.annotation.ViewEvent;
 import com.eduportal.model.Article;
 import com.eduportal.model.Course;
@@ -40,17 +41,6 @@ public class NodeController {
         model.addAttribute("type", type);
 
         return type + "/new-element";
-    }
-
-    @PostMapping(value = "/{course}/article/add")
-    public String add(@PathVariable("course") Course course, Article article) {
-        nodeRepository.save(article);
-
-        course.getNodes().add(article);
-
-        courseRepository.save(course);
-
-        return "redirect:/node/" + article.getId();
     }
 
     @ViewEvent
