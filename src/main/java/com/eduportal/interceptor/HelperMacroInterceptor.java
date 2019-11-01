@@ -3,11 +3,10 @@ package com.eduportal.interceptor;
 import com.eduportal.annotation.Interceptor;
 import com.eduportal.auth.repository.UserRepository;
 import com.eduportal.auth.service.UserDetailService;
-import com.eduportal.model.Settings;
-import com.eduportal.repository.SettingsRepository;
+import com.eduportal.model.Setting;
+import com.eduportal.repository.SettingRepository;
 import com.eduportal.web.SessionMessage;
 import freemarker.template.TemplateBooleanModel;
-import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.utility.DeepUnwrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +14,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Interceptor
@@ -36,7 +31,7 @@ public class HelperMacroInterceptor  extends AbstractMacroInterceptor {
     protected MessageSource messageSource;
 
     @Autowired
-    private SettingsRepository settingsRepository;
+    private SettingRepository settingRepository;
 
     @PostConstruct
     public void startUp() {
@@ -52,7 +47,7 @@ public class HelperMacroInterceptor  extends AbstractMacroInterceptor {
         });
 
         macros.put("getSetting", (params) -> {
-            Optional<Settings> setting = settingsRepository.findById(params.get(0).toString());
+            Optional<Setting> setting = settingRepository.findById(params.get(0).toString());
             return setting.isPresent()? setting.get().getValue():null;
         });
 

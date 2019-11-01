@@ -6,8 +6,8 @@ import com.eduportal.auth.model.User;
 import com.eduportal.auth.repository.GroupRepository;
 import com.eduportal.auth.repository.RoleRepository;
 import com.eduportal.auth.repository.UserRepository;
-import com.eduportal.model.Settings;
-import com.eduportal.repository.SettingsRepository;
+import com.eduportal.model.Setting;
+import com.eduportal.repository.SettingRepository;
 import com.eduportal.service.MailService;
 import com.eduportal.web.admin.form.GroupAddForm;
 import com.eduportal.web.admin.form.InviteUserForm;
@@ -23,7 +23,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,7 +42,7 @@ public class DashboardController {
     private UserRepository userRepository;
 
     @Autowired
-    private SettingsRepository settingsRepository;
+    private SettingRepository settingRepository;
 
     @Autowired
     private MailService mailService;
@@ -118,35 +117,35 @@ public class DashboardController {
 
     @PostMapping("/dashboard")
     public String save(Model model, MailConfigForm mail) {
-        Settings<String> property = new Settings<>();
+        Setting<String> property = new Setting<>();
         property.setName("mail.smtp");
         property.setValue(mail.getSmtp());
 
-        settingsRepository.save(property);
+        settingRepository.save(property);
 
-        property = new Settings<>();
+        property = new Setting<>();
         property.setName("mail.port");
         property.setValue(mail.getPort());
 
-        settingsRepository.save(property);
+        settingRepository.save(property);
 
-        property = new Settings<>();
+        property = new Setting<>();
         property.setName("mail.user");
         property.setValue(mail.getUser());
 
-        settingsRepository.save(property);
+        settingRepository.save(property);
 
-        property = new Settings<>();
+        property = new Setting<>();
         property.setName("mail.pass");
         property.setValue(mail.getPassword());
 
-        settingsRepository.save(property);
+        settingRepository.save(property);
 
-        property = new Settings<>();
+        property = new Setting<>();
         property.setName("mail.tls");
         property.setValue(mail.getTls());
 
-        settingsRepository.save(property);
+        settingRepository.save(property);
 
         return "redirect:/admin/dashboard";
     }
@@ -157,16 +156,19 @@ public class DashboardController {
         user.setEmail(inviteUserForm.getEmail());
         user.setUsername(inviteUserForm.getEmail());
 
-        inviteUserForm.getGroups().stream().map(role->Long.parseLong(role))
-                .map(groupId->groupRepository.findById(groupId))
-                .filter(optional->optional.isPresent()).map(optional->optional.get())
-                .forEach(group->user.getGroups().add(group));
+        if(null != inviteUserForm.getGroups()) {
+            inviteUserForm.getGroups().stream().map(role -> Long.parseLong(role))
+                    .map(groupId -> groupRepository.findById(groupId))
+                    .filter(optional -> optional.isPresent()).map(optional -> optional.get())
+                    .forEach(group -> user.getGroups().add(group));
+        }
 
-        inviteUserForm.getRoles().stream().map(role->Long.parseLong(role))
-                .map(roleId->roleRepository.findById(roleId))
-                .filter(optional->optional.isPresent()).map(optional->optional.get())
-                .forEach(role->user.getRoles().add(role));
-
+        if(null != inviteUserForm.getRoles()) {
+            inviteUserForm.getRoles().stream().map(role -> Long.parseLong(role))
+                    .map(roleId -> roleRepository.findById(roleId))
+                    .filter(optional -> optional.isPresent()).map(optional -> optional.get())
+                    .forEach(role -> user.getRoles().add(role));
+        }
         userRepository.save(user);
 
         mailService.sendInvitation(RequestHelper.createURL(request, null), user);
@@ -188,7 +190,7 @@ public class DashboardController {
 
         groupRepository.save(group);
 
-        model.addAttribute("groups", groupRepository.findAll());
+        model.addAttribute("groups", groupRepository.findAll(PageRequest.of(INITIAL_PAGE, PAGE_SIZE)));
         return "admin/tab/partial/group-list";
     }
 
@@ -196,7 +198,7 @@ public class DashboardController {
     public String removeUser(Model model, @PathVariable User user) {
         userRepository.delete(user);
 
-        model.addAttribute("users", userRepository.findAll(PageRequest.of(1, PAGE_SIZE)));
+        model.addAttribute("users", userRepository.findAll(PageRequest.of(INITIAL_PAGE, PAGE_SIZE)));
 
         return "admin/tab/partial/user-list";
     }

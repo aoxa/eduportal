@@ -133,7 +133,7 @@ body {
     cursor: pointer;
 }
 
-.badge {
+.notification-badge {
     position: absolute;
     right: 6px;
     padding: 5px 8px;

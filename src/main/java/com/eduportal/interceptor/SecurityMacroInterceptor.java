@@ -34,7 +34,7 @@ public class SecurityMacroInterceptor extends AbstractMacroInterceptor {
 
             boolean hasRole = false;
 
-            for (Role roles : wrapper.getUser().getRoles()) {
+            for (Role roles : wrapper.getUser().getAllRoles()) {
                 hasRole |= roles.getName().equals(expectedRole);
             }
 
@@ -52,7 +52,7 @@ public class SecurityMacroInterceptor extends AbstractMacroInterceptor {
 
             boolean hasRole = false;
 
-            for (Role roles : wrapper.getUser().getRoles()) {
+            for (Role roles : wrapper.getUser().getAllRoles()) {
                 hasRole |= roleNames.contains(roles.getName());
             }
 
@@ -68,7 +68,7 @@ public class SecurityMacroInterceptor extends AbstractMacroInterceptor {
                 roleNames.add((String) DeepUnwrap.permissiveUnwrap((TemplateModel) param));
             }
 
-            boolean hasRole = !wrapper.getUser().getRoles().isEmpty();
+            boolean hasRole = !wrapper.getUser().getAllRoles().isEmpty();
 
             for (Role roles : wrapper.getUser().getRoles()) {
                 hasRole &= roleNames.contains(roles.getName());

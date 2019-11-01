@@ -15,5 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByUsernameIsLikeIgnoreCase(String username);
 
+    @Query("SELECT u FROM User u join fetch u.groups g  join fetch g.roles rg join fetch u.roles r where ?1 in (r) or ?1 in (rg)")
     List<User> findAllByRoles(Role role);
 }

@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("node")
-@Table(indexes = {@Index(columnList = "node_id", name = "notification_node_hidx")})
 public class NodeNotification extends BaseNotification {
     @ManyToOne(cascade = CascadeType.ALL)
     private Node node;

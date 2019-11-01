@@ -2,6 +2,7 @@ package com.eduportal.repository;
 
 import com.eduportal.auth.model.User;
 import com.eduportal.model.notifications.BaseNotification;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,4 +11,7 @@ public interface NotificationRepository extends JpaRepository<BaseNotification, 
     List<BaseNotification> getAllByUserAndSeenFalse(User user);
 
     Integer countAllByUserAndSeenFalse(User user);
+
+    List<BaseNotification> getAllByUserAndSeenFalse(User user, Pageable pageable);
+    List<BaseNotification> getAllByUser(User user, Pageable pageable);
 }

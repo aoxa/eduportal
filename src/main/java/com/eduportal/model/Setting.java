@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-public class Settings<T extends Serializable> {
+public class Setting<T extends Serializable> {
 
     @Id
     @Column(unique = true)

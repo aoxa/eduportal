@@ -1,7 +1,9 @@
 package com.eduportal.aspect;
 
+import com.eduportal.auth.model.BuiltinRoles;
 import com.eduportal.auth.model.Role;
 import com.eduportal.auth.model.User;
+import com.eduportal.auth.repository.RoleRepository;
 import com.eduportal.auth.repository.UserRepository;
 import com.eduportal.model.Node;
 import com.eduportal.model.notifications.NodeNotification;
@@ -23,11 +25,20 @@ public class NotificationAspect {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
+    private Role teacher;
+
     @After("execution(* com.eduportal.service.node.NodeService.saveOrUpdate(..))")
     public void handleNotification(JoinPoint joinPoint) {
         Node node = fetchNode(joinPoint.getArgs());
         Role role = node.getCourse().getNeededRole();
         List<User> users = userRepository.findAllByRoles(role);
+
+        if(null == teacher) {
+            teacher = roleRepository.findByName(BuiltinRoles.teacher.toString());
+        }
 
         for (User user : users) {
             NodeNotification notification = new NodeNotification();

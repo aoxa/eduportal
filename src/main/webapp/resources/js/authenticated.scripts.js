@@ -14,9 +14,11 @@ $(function() {
 
 function updateBadge() {
     $.get("/notification/count.json", function(data){
-        var $badge = $(".nav-item.dropdown .dropdown-item .badge");
+        var $badge = $(".nav-item.dropdown .dropdown-item .notification-badge");
         var notifications = parseInt(data);
         if(notifications > 0) {
+            $badge.show();
+
             if(notified != notifications) {
                 $(".nav-link.dropdown-toggle").addClass("notify");
                 notified = notifications;

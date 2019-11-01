@@ -1,4 +1,5 @@
 <#import "/spring.ftl" as spring />
+<#include "macros.ftl" />
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="<@spring.url "/" />">Mi sitio</a>
@@ -31,12 +32,36 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="menu-user">
                     <a class="dropdown-item" onclick="document.forms['logoutForm'].submit()">Logout</a>
                 <#if hasAuthority('admin')><a class="dropdown-item" href="<@spring.url '/admin/dashboard' />">Admin</a></#if>
-                    <a class="dropdown-item">Notificaciones<span class="badge">3</span></a>
+                    <a class="dropdown-item" id="notifications" >Notificaciones<span class="notification-badge" style="display: none"></span></a>
                 </div>
             </li>
         </ul>
     </div>
 </nav>
+<a id="notification-modal" data-toggle="modal"
+   data-target="#new-notifications" style="display: none;"></a>
+
+<@modal modalId="new-notifications" header='Notificaciones'
+header='' content='<div id="new-notifications-content"></div>'></@modal>
+
+<script>
+    $(function(){
+        $("#notifications").click(function() {
+            if(!    $(".nav-item.dropdown .dropdown-item .notification-badge").is(":visible")) {
+                window.location = '<@spring.url "/notifications/all" />';
+                return false;
+            }
+
+            $(".nav-item.dropdown .dropdown-item .notification-badge").hide();
+            $("#notification-modal").click();
+        });
+        $('#new-notifications').on('show.bs.modal', function (event) {
+            $.get("/notifications/latest", function(data) {$("#new-notifications-content").html(data);});
+        })
+    });
+</script>
+
+
 <form id="logoutForm" method="POST" action="<@spring.url '/logout' />">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>

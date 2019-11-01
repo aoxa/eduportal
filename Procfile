@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar  build/libs/eduportal-2.1.1.RELEASE.jar
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar  build/libs/eduportal-0.0.1.SNAPSHOT.jar

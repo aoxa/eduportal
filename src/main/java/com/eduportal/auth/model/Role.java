@@ -2,11 +2,14 @@ package com.eduportal.auth.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "rol", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
-public class Role {
+public class Role implements Serializable {
+    private static final long serialVersionUID = 1133799434508676095L;
+
     public Type getType() {
         return type;
     }

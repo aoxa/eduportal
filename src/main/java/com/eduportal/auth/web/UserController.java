@@ -1,15 +1,12 @@
 package com.eduportal.auth.web;
 
-import com.eduportal.auth.model.Group;
 import com.eduportal.auth.model.Registration;
-import com.eduportal.auth.model.Role;
 import com.eduportal.auth.model.User;
 import com.eduportal.auth.repository.GroupRepository;
 import com.eduportal.auth.repository.RoleRepository;
 import com.eduportal.auth.service.SecurityService;
 import com.eduportal.auth.service.UserService;
 import com.eduportal.auth.validator.RegistrationValidator;
-import com.eduportal.auth.validator.UserValidator;
 import com.eduportal.auth.web.form.RegistrationForm;
 import com.eduportal.service.MailService;
 import com.eduportal.web.helper.RequestHelper;
@@ -62,7 +59,7 @@ public class UserController {
 
             form.setUser(user);
 
-            boolean isParent = user.getRoles().stream().filter(r->r.getName().equals("parent")).count() != 0;
+            boolean isParent = user.getAllRoles().stream().filter(r->r.getName().equals("parent")).count() != 0;
 
             model.addAttribute("isParent", isParent);
 
@@ -89,7 +86,7 @@ public class UserController {
 
         User user = registrationForm.getUser();
 
-        boolean isParent = user.getRoles().stream().filter(r->r.getName().equals("parent")).count() != 0;
+        boolean isParent = user.getAllRoles().stream().filter(r->r.getName().equals("parent")).count() != 0;
 
         if(bindingResult.hasErrors()) {
             model.addAttribute("isParent", isParent);

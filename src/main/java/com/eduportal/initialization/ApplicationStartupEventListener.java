@@ -1,9 +1,11 @@
 package com.eduportal.initialization;
 
+import com.eduportal.auth.model.BuiltinRoles;
 import com.eduportal.auth.model.Group;
 import com.eduportal.auth.model.Role;
 import com.eduportal.auth.model.User;
 import com.eduportal.auth.repository.GroupRepository;
+import com.eduportal.auth.repository.RoleRepository;
 import com.eduportal.auth.repository.UserRepository;
 import com.eduportal.service.node.NodeType;
 import com.eduportal.service.node.NodeTypeService;
@@ -23,12 +25,16 @@ public class ApplicationStartupEventListener {
     private GroupRepository groupRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private NodeTypeService nodeTypeService;
 
-    private final String[] builtins = {"admin", "parent", "teacher", "pupil"};
+    private final String[] builtins = {BuiltinRoles.admin.toString(), BuiltinRoles.parent.toString(),
+            BuiltinRoles.teacher.toString(), BuiltinRoles.pupil.toString()};
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -37,7 +43,6 @@ public class ApplicationStartupEventListener {
             if(group == null) {
                 group = new Group();
                 group.setName(name);
-
             }
 
             Hibernate.initialize(group);
@@ -50,7 +55,7 @@ public class ApplicationStartupEventListener {
         User user = userRepository.findByUsername("siteadmin");
 
         if(null != user) {
-            user.getGroups().add(groupRepository.findByName("admin"));
+            user.getGroups().add(groupRepository.findByName(BuiltinRoles.admin.toString()));
             userRepository.save(user);
         }
     }
@@ -61,11 +66,16 @@ public class ApplicationStartupEventListener {
                 for(NodeType nodeType : nodeTypeService.getNodeTypes() ) {
                     roles.add(nodeType.getEditRole());
                 }
+                roles.add(roleRepository.findByName(name));
                 break;
             case "pupil":
                 for(NodeType nodeType : nodeTypeService.getNodeTypes() ) {
                     roles.add(nodeType.getAnswerRole());
                 }
+                roles.add(roleRepository.findByName(name));
+                break;
+            case "parent":
+                roles.add(roleRepository.findByName(name));
                 break;
         }
     }
