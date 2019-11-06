@@ -31,10 +31,11 @@ public class UserDetailService implements UserDetailsService {
 
         if(!user.getActive()) throw new DisabledException("User not active");
 
-        final Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
+        final Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 
-        user.getRoles().stream()
-                .forEach(role ->grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
+        user.getAllRoles()
+                .stream()
+                .forEach(role->grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName())));
 
         return new UserDetailsWrapper(
                 user,

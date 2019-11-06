@@ -6,6 +6,7 @@ import com.eduportal.auth.model.User;
 import com.eduportal.auth.repository.GroupRepository;
 import com.eduportal.auth.repository.RoleRepository;
 import com.eduportal.auth.repository.UserRepository;
+import com.eduportal.auth.service.UserService;
 import com.eduportal.model.Setting;
 import com.eduportal.repository.SettingRepository;
 import com.eduportal.service.MailService;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-@Secured("ROLE_admin")
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/admin")
 public class DashboardController {
     public static final int PAGE_SIZE = 5;
@@ -40,6 +42,9 @@ public class DashboardController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private SettingRepository settingRepository;
@@ -66,6 +71,14 @@ public class DashboardController {
         model.addAttribute("groups", groupRepository.findAll(PageRequest.of(INITIAL_PAGE, PAGE_SIZE)));
 
         return "admin/groups";
+    }
+
+    @PostMapping("/users/{user}/reset")
+    public @ResponseBody String reset(@PathVariable User user, String password) {
+        user.setPassword(password);
+        userService.save(user);
+
+        return "tru";
     }
 
     @GetMapping("/groups/remove/{group}")

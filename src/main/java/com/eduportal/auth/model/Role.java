@@ -42,6 +42,11 @@ public class Role implements Serializable {
         return name;
     }
 
+    @Transient
+    public String getRoleName() {
+        return "ROLE_" + name.toUpperCase();
+    }
+
     public void setName(String name) {
         this.name = name;
     }

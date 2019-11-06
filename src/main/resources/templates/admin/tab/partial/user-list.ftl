@@ -16,6 +16,9 @@
                data-target="#user-info-modal"></i>
             <#if !(user.active??) || !user.active>
                 <i class="fa fa-ban" aria-hidden="true"></i>
+            <#else>
+                <i class="fa fa-lock" style="cursor:pointer" data-username="${user.username!"not set yet"}" data-userid="${user.id}" data-toggle="modal"
+                    data-target="#user-reset-modal"></i>
             </#if>
             <i class="fa fa-trash" style="cursor:pointer" data-username="${user.username!"not set yet"}" data-userid="${user.id}" data-toggle="modal"
                data-target="#user-remove-modal"></i>

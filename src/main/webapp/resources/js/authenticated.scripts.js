@@ -13,6 +13,9 @@ $(function() {
 });
 
 function updateBadge() {
+    if(! $(".nav-link.dropdown-toggle").is(":visible")) {
+        return;
+    }
     $.get("/notification/count.json", function(data){
         var $badge = $(".nav-item.dropdown .dropdown-item .notification-badge");
         var notifications = parseInt(data);

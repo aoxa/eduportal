@@ -39,7 +39,7 @@ public class RoleUpdateInterceptor  extends HandlerInterceptorAdapter {
             HttpServletRequest req,
             HttpServletResponse res,
             Object o,
-            ModelAndView model) throws Exception {
+            ModelAndView model) {
         final User currentUser = securityService.findLoggedInUser();
         if(null != currentUser &&
                 users.contains(currentUser)) {
@@ -55,7 +55,7 @@ public class RoleUpdateInterceptor  extends HandlerInterceptorAdapter {
         List<GrantedAuthority> updatedAuthorities = new ArrayList<>();
 
         for (Role role : current.getAllRoles()) {
-            updatedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+            updatedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         }
 
         Authentication newAuth = new UsernamePasswordAuthenticationToken(new UserDetailService.UserDetailsWrapper(

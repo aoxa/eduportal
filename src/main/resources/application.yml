@@ -15,16 +15,16 @@ spring:
     hibernate:
       ddl-auto: update
     generate-ddl: true
-  datasource:
-    username: esnterplluemge
-    password: 76bd5af4d50eec4b8d8bf830403e8c5472ca26e89cc0eaacf71e34c6de2011a7
-    url: jdbc:postgresql://ec2-54-83-201-84.compute-1.amazonaws.com:5432/d72qjcjtj689uk
-    driverClassName: org.postgresql.Driver
   #datasource:
-    #username: eduportal
-    #password: RT687yui
-    #url: jdbc:postgresql://localhost:5432/eduportal
+    #username: esnterplluemge
+    #password: 76bd5af4d50eec4b8d8bf830403e8c5472ca26e89cc0eaacf71e34c6de2011a7
+    #url: jdbc:postgresql://ec2-54-83-201-84.compute-1.amazonaws.com:5432/d72qjcjtj689uk
     #driverClassName: org.postgresql.Driver
+  datasource:
+    username: eduportal
+    password: RT687yui
+    url: jdbc:postgresql://localhost:5432/eduportal
+    driverClassName: org.postgresql.Driver
   messages:
     basename: validation, messages
   freemarker:

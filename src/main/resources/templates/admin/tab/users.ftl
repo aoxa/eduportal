@@ -37,6 +37,11 @@
     <button id="map-user-rol" class="btn btn-success">Agregar</button>
 </div>
 
+<@modal modalId='user-reset-modal' header='Desea actualizar el password del usuario?'
+    content='<div class="form-group"><label>Nuevo password</label>
+                    <input class="form-control" name="password" id="password"></div>' footerAccept='Actualizar'
+    formAction='/admin/users/{ID}/reset' form=true footerCancel='Cerrar' ></@modal>
+
 <@modal modalId='user-remove-modal' header='' content='Desea eliminar el usuario?' footerAccept='Eliminar'
 footerCancel='Cerrar' ></@modal>
 
@@ -126,6 +131,35 @@ content='<h6>Grupos del usuario</h6><div id="group-info" class="row"></div>
                 $("#user-remove-modal").modal('toggle')
             }
         });
+    });
+
+    $('#user-reset-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var userId = button.data('userid');
+        var action = decodeURIComponent($(this).find("form").attr("action"));
+
+        $(this).find("form").attr("action", action.replace("{ID}", userId));
+    });
+
+    $('#user-reset-modal .btn-primary').click(function(){
+
+        $.ajax({
+            type: "POST",
+            url: $('#user-reset-modal form').attr("action"),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('${_csrf.headerName}', "${_csrf.token}");
+            },
+            data: JSON.stringify(content),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (data, textStatus, request) {
+                $("#user-reset-modal").modal('toggle')
+            }
+        });
+
+        return false;
     });
 
     $('#user-remove-modal').on('show.bs.modal', function (event) {
