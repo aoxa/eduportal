@@ -8,8 +8,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
 }
 
-group = 'org.springframework.boot'
-version = '2.1.1.RELEASE'
+group = 'com.zuppelli.project'
+version = '0.0.1-SNAPSHOT'
 
 description = """auth"""
 
@@ -21,9 +21,8 @@ tasks.withType(JavaCompile) {
 }
 
 task stage(dependsOn: ['build', 'clean'])
-build.mustRunAfter clean
 
-// enableFeaturePreview('IMPROVED_POM_SUPPORT')
+build.mustRunAfter clean
 
 repositories {
      maven { url "https://repo.maven.apache.org/maven2" }
@@ -37,21 +36,26 @@ bootRun {
     jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8585"]
 }
 
-dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-dependencies', version:version
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:version
+release {
+    snapshotSuffix = '-SNAPSHOT'
+    pushReleaseVersionBranch=true
+}
 
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:version
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-dependencies', version:'2.1.1.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.1.1.RELEASE'
+
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.1.1.RELEASE'
 
     compile('org.apache.tomcat.embed:tomcat-embed-jasper')
 
     compile group: 'org.springframework.security', name: 'spring-security-taglibs'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version:version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version:version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.1.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:'2.1.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'2.1.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version:'2.1.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version:'2.1.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version:'2.1.1.RELEASE'
 
     compile group: 'javax.servlet', name: 'jstl', version:'1.2'
     compile group: 'com.sun.mail', name: 'javax.mail'
