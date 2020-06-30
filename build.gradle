@@ -38,7 +38,7 @@ bootRun {
 
 release {
     snapshotSuffix = '-SNAPSHOT'
-    pushReleaseVersionBranch=true
+    pushReleaseVersionBranch=release
 }
 
 dependencies {
